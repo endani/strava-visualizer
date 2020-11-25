@@ -1,3 +1,3 @@
 # Strava Visualizer
 
-Project developed by Dani Ramírez on Dec 2020
+Project developed by Dani Ramírez on 2020.
