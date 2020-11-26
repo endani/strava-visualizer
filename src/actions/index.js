@@ -1,6 +1,21 @@
 import axios from '../apis/axios';
+import ENV from '../ENV.ts';
 
-const BASE_URL = 'https://pokeapi.co/api/v2/pokemon/';
+const BASE_URL = 'https://www.strava.com';
+
+const API_CLIENT = ENV.STRAVA_CLIENT;
+const API_SECRET = ENV.STRAVA_SECRET;
+
+export const setToken = (code) => async (dispatch) => {
+  const response = await axios.post(`${BASE_URL}/oauth/token`, {
+    grant_type: 'authorization_code',
+    client_id: API_CLIENT,
+    client_secret: API_SECRET,
+    code,
+  });
+
+  dispatch({ type: 'SET_TOKEN', payload: response.data });
+};
 
 export const allPokemon = (url) => async (dispatch) => {
   const response = await axios.get(url);
