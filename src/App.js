@@ -8,7 +8,7 @@ function App() {
     <>
       <BrowserRouter>
         <Route path="/" exact component={index} />
-        <Route path="/strava" exact component={strava} />
+        <Route path="/dashboard" exact component={strava} />
         {/* <Route path="/:name" exact component={SinglePokemon} /> */}
       </BrowserRouter>
     </>

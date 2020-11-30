@@ -30,7 +30,7 @@ const Index = () => (
           <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
             <div className="rounded-md shadow">
               <a
-                href="https://www.strava.com/oauth/authorize?client_id=56740&response_type=code&redirect_uri=http://localhost:3000/strava/&approval_prompt=force&scope=read"
+                href="https://www.strava.com/oauth/authorize?client_id=56740&response_type=code&redirect_uri=http://localhost:3000/dashboard/&approval_prompt=force&scope=activity:read_all,read_all,activity:read,profile:read_all"
                 className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10"
               >
                 Login with Strava

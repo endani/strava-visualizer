@@ -1,5 +1,6 @@
 import axios from '../apis/axios';
 import ENV from '../ENV.ts';
+import store from '../store';
 
 const BASE_URL = 'https://www.strava.com';
 
@@ -14,7 +15,17 @@ export const setToken = (code) => async (dispatch) => {
     code,
   });
 
-  dispatch({ type: 'SET_TOKEN', payload: response.data });
+  await dispatch({ type: 'SET_TOKEN', payload: response.data });
+  console.log(response.data);
+  const athlete = await axios.get(`${BASE_URL}/api/v3/athlete`, {
+    headers: {
+      Accept: 'application/json',
+      Authorization: `Bearer ${response.data.access_token}`,
+    },
+  });
+
+  console.log(athlete.data);
+  // dispatch({ type: 'SET_USER', payload: response.data });
 };
 
 export const allPokemon = (url) => async (dispatch) => {
