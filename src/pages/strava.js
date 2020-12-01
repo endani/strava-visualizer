@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import queryString from 'query-string';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-
 import { setToken } from '../actions';
 
 const Strava = (props) => {
