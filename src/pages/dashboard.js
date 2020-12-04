@@ -138,7 +138,7 @@ const Dashboard = (props) => {
               <h2 className="text-3xl tracking-tight font-extrabold text-gray-900 dark:text-gray-200 sm:text-4xl">
                 Latest Activities
               </h2>
-              <div className="mt-12 max-w-lg mx-auto grid gap-5 lg:grid-cols-2 xl:grid-cols-3 xl:max-w-none">
+              <div className="mt-12 max-w-xl mx-auto grid gap-5 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 xl:max-w-none">
                 {renderActivities}
               </div>
               <div className="mt-5 flex-1 flex justify-between sm:justify-end">

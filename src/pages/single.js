@@ -41,6 +41,7 @@ const Single = (props) => {
       .then((responses) => Promise.all(responses.map((res) => res.json())))
       .then(([summary, stream]) => {
         setActivity(summary);
+        console.log(stream);
         setActivityStream(stream);
         setLoading(false);
       });
@@ -71,8 +72,11 @@ const Single = (props) => {
                     />
                   </time>
                 </div>
-
-                <RenderLineChart data={activityStream} />
+                {/* {activity.start_latlng ? (
+                  <RenderLineChart data={activityStream} />
+                ) : (
+                  <div />
+                )} */}
               </div>
             </div>
           </div>

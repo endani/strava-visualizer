@@ -12,7 +12,7 @@ const SideMenu = (props) => {
       <nav className="bg-gray-50 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-600 pt-5 pb-4 flex flex-col flex-grow overflow-y-auto">
         <div className="flex-grow mt-5 flex flex-col">
           <div className="flex-1 space-y-1">
-            <div className="mx-auto m-3 sm:px-6 lg:pt-8 lg:pb-8 lg:px-8">
+            <div className="mx-auto sm:px-6 lg:pt-8 lg:pb-8 lg:px-8">
               <img
                 className="hidden h-32 w-32 rounded-full sm:block m-auto"
                 src={user.profile}
@@ -79,24 +79,11 @@ const SideMenu = (props) => {
                 </dd>
               </div>
             </dl>
-
-            {/* <hr />
-
-            <a
-              className="group flex items-center px-3 py-2 text-sm font-medium text-purple-600 bg-purple-50 border-l-4 border-purple-600"
-              aria-current="page"
-            >
-              Dashboard
-            </a>
-
-            <a className="group rounded-md py-2 px-4 flex items-center text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50">
-              Gear
-            </a> */}
           </div>
         </div>
 
-        <div className="flex-shrink-0 ">
-          <a className="group rounded-md py-2 px-4 flex items-center text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+        <div className="flex-shrink-3 ">
+          <a className="group py-2 px-4 flex items-center text-sm font-medium text-gray-600 hover:text-gray-200 hover:bg-gray-800">
             <svg
               className="mr-3 h-6 w-6 text-gray-400 group-hover:text-gray-500"
               xmlns="http://www.w3.org/2000/svg"

@@ -13,7 +13,8 @@ export const setToken = (code) => async (dispatch) => {
   //   client_secret: API_SECRET,
   //   code,
   // });
-  // await dispatch({ type: 'SET_TOKEN', payload: response.data.token });
+  // console.log(response.data);
+  // await dispatch({ type: 'SET_TOKEN', payload: response.data });
 };
 
 export const getAthlete = (token) => async (dispatch) => {

@@ -15,6 +15,7 @@ import _ from 'lodash';
 import useMedia from 'use-media';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 const ChartContainer = styled.div`
   padding: 10;
@@ -31,10 +32,16 @@ const Tick = ({
   visibleTicksCount,
   ...rest
 }) => (
-  <text style={{ fontSize: '12px' }} {...rest} dy={16}>
+  <text style={{ fontSize: '12px' }} dy={16}>
     {value} {displayActivityDistanceUnit}
   </text>
 );
+
+Tick.propTypes = {
+  payload: PropTypes.object,
+  verticalAnchor: PropTypes.number,
+  visibleTicksCount: PropTypes.any,
+};
 
 const CustomTooltipStyled = styled.div`
   background: ${(props) => props.theme.colors.cardBackground}};
@@ -49,32 +56,30 @@ const CustomTooltipStyled = styled.div`
 `;
 
 const RenderLineChart = (props) => {
+  console.log(props);
   const mediaDarkMode = useMedia('(prefers-color-scheme: dark)');
   const originalArray = props.data;
   console.log(originalArray);
+
   const [showHeartrate, setShowHeartrate] = React.useState(true);
 
-  const { user } = useAuthState();
+  const displayActivityDistanceUnit = 'km';
 
-  displayActivityDistanceUnit =
-    user.measurement_preference == 'meters' ? 'km' : 'mi';
+  const displayActivityTotalElevationGainUnit = 'm';
 
-  const displayActivityTotalElevationGainUnit =
-    user.measurement_preference == 'meters' ? 'm' : 'ft';
-
-  const displaySpeedUnit =
-    user.measurement_preference == 'meters' ? 'kph' : 'mph';
+  const displaySpeedUnit = 'kph';
 
   // distance
+
+  console.log(originalArray);
+
   const distance = originalArray.filter((item) =>
     item.type.includes('distance')
   );
   const distanceStream = distance[0].data;
   const distanceInKm = distanceStream.map((item) => _.round(item / 1000, 2));
-  const distanceInMi = _.map(distanceInKm, kmToMiles);
 
-  const displayDistance =
-    user.measurement_preference == 'meters' ? distanceInKm : distanceInMi;
+  const displayDistance = distanceInKm;
 
   console.log(displayDistance, distanceStream);
 
@@ -127,10 +132,8 @@ const RenderLineChart = (props) => {
   }
 
   const speedKPH = _.map(speedStream, toKPH);
-  const speedMPH = _.map(speedKPH, KPHtoMPH);
 
-  const displaySpeed =
-    user.measurement_preference == 'meters' ? speedKPH : speedMPH;
+  const displaySpeed = speedKPH;
 
   const formattedData = displayDistance.map((distance, index) => ({
     distance,
@@ -161,6 +164,11 @@ const RenderLineChart = (props) => {
     return <div />;
   };
 
+  CustomTooltip.propTypes = {
+    payload: PropTypes.object,
+    label: PropTypes.string,
+    active: PropTypes.bool,
+  };
   console.log(formattedData);
 
   return (
@@ -221,6 +229,10 @@ const RenderLineChart = (props) => {
       </ResponsiveContainer>
     </ChartContainer>
   );
+};
+
+RenderLineChart.propTypes = {
+  data: PropTypes.object,
 };
 
 export default RenderLineChart;
