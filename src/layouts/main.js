@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const Main = ({ children }) => (
   <div className="min-h-screen bg-white flex">
@@ -16,7 +17,7 @@ const Main = ({ children }) => (
 );
 
 Main.propTypes = {
-  children: Object,
+  children: PropTypes.object,
 };
 
 export default Main;

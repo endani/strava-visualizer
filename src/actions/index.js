@@ -13,11 +13,14 @@ export const setToken = (code) => async (dispatch) => {
   //   client_secret: API_SECRET,
   //   code,
   // });
-  // await dispatch({ type: 'SET_TOKEN', payload: response.data });
+  // await dispatch({ type: 'SET_TOKEN', payload: response.data.token });
+};
+
+export const getAthlete = (token) => async (dispatch) => {
   // const athlete = await axios.get(`${BASE_URL}/api/v3/athlete`, {
   //   headers: {
   //     Accept: 'application/json',
-  //     Authorization: `Bearer ${store.getState().token.access_token}`,
+  //     Authorization: `Bearer ${token}`,
   //   },
   // });
   // dispatch({ type: 'SET_USER', payload: athlete.data });

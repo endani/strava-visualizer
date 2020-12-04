@@ -1,118 +1,104 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
-const SideMenu = () => (
-  <div className="w-64 flex flex-col">
-    <nav className="bg-gray-50 border-r border-gray-200 pt-5 pb-4 flex flex-col flex-grow overflow-y-auto">
-      <div className="flex-shrink-0 px-4 flex items-center">
-        <img
-          className="h-8 w-auto"
-          src="https://tailwindui.com/img/logos/easywire-logo-purple-600-mark-gray-900-text.svg"
-          alt="Easywire"
-        />
-      </div>
-      <div className="flex-grow mt-5 flex flex-col">
-        <div className="flex-1 space-y-1">
+const SideMenu = (props) => {
+  const { user } = props;
+  if (!user) {
+    return null;
+  }
+  return (
+    <div className="w-90 flex-col hidden sm:flex">
+      <nav className="bg-gray-50 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-600 pt-5 pb-4 flex flex-col flex-grow overflow-y-auto">
+        <div className="flex-grow mt-5 flex flex-col">
+          <div className="flex-1 space-y-1">
+            <div className="mx-auto m-3 sm:px-6 lg:pt-8 lg:pb-8 lg:px-8">
+              <img
+                className="hidden h-32 w-32 rounded-full sm:block m-auto"
+                src={user.profile}
+                alt=""
+              />
+              <div className="flex items-center">
+                <h4 className="m-auto mt-5 text-2xl font-bold leading-7 text-gray-900 dark:text-gray-200 sm:leading-9 sm:truncate">
+                  {user.firstname} {user.lastname}
+                </h4>
+              </div>
+              <dl className="mt-10 flex flex-col sm:ml-3 sm:mt-1 sm:flex-row sm:flex-wrap">
+                <dt className="sr-only">Company</dt>
+                <dd className="flex items-center text-sm text-gray-500 font-medium capitalize sm:mr-6">
+                  <svg
+                    className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-2a1 1 0 00-1-1H9a1 1 0 00-1 1v2a1 1 0 01-1 1H4a1 1 0 110-2V4zm3 1h2v2H7V5zm2 4H7v2h2V9zm2-4h2v2h-2V5zm2 4h-2v2h2V9z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  {user.city}
+                </dd>
+                <dt className="sr-only">Account status</dt>
+                <dd className="mt-3 flex items-center text-sm text-gray-500 font-medium sm:mr-6 sm:mt-0 capitalize">
+                  <svg
+                    className="flex-shrink-0 mr-1.5 h-5 w-5 text-green-400"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="orange"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  Premium
+                </dd>
+              </dl>
+            </div>
+
+            <dl className="rounded-lg sm:grid sm:grid-cols-2">
+              <div className="flex flex-col border-b border-gray-100 p-6 plr-10 text-center sm:border-0 sm:border-r dark:border-gray-600">
+                <dt className="order-2 mt-2 text-lg leading-6 font-medium text-gray-500">
+                  Following
+                </dt>
+                <dd className="order-1 text-5xl font-extrabold text-indigo-600 dark:text-gray-200">
+                  {user.friend_count}
+                </dd>
+              </div>
+              <div className="flex flex-col border-t border-b border-gray-100 p-6 plr-10 text-center sm:border-0 ">
+                <dt className="order-2 mt-2 text-lg leading-6 font-medium text-gray-500">
+                  Followers
+                </dt>
+                <dd className="order-1 text-5xl font-extrabold text-indigo-600 dark:text-gray-200">
+                  {user.follower_count}
+                </dd>
+              </div>
+            </dl>
+
+            {/* <hr />
+
+            <a
+              className="group flex items-center px-3 py-2 text-sm font-medium text-purple-600 bg-purple-50 border-l-4 border-purple-600"
+              aria-current="page"
+            >
+              Dashboard
+            </a>
+
+            <a className="group rounded-md py-2 px-4 flex items-center text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+              Gear
+            </a> */}
+          </div>
+        </div>
+
+        <div className="flex-shrink-0 ">
           <a className="group rounded-md py-2 px-4 flex items-center text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50">
             <svg
               className="mr-3 h-6 w-6 text-gray-400 group-hover:text-gray-500"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-              />
-            </svg>
-            Home
-          </a>
-
-          <a className="group rounded-md py-2 px-4 flex items-center text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50">
-            <svg
-              className="mr-3 h-6 w-6 text-gray-400 group-hover:text-gray-500"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-              />
-            </svg>
-            Jobs
-          </a>
-
-          <a className="group rounded-md py-2 px-4 flex items-center text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50">
-            <svg
-              className="mr-3 h-6 w-6 text-gray-400 group-hover:text-gray-500"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M10 21h7a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v11m0 5l4.879-4.879m0 0a3 3 0 104.243-4.242 3 3 0 00-4.243 4.242z"
-              />
-            </svg>
-            Applications
-          </a>
-
-          <a className="group rounded-md py-2 px-4 flex items-center text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50">
-            <svg
-              className="mr-3 h-6 w-6 text-gray-400 group-hover:text-gray-500"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-              />
-            </svg>
-            Messages
-          </a>
-
-          <a className="group rounded-md py-2 px-4 flex items-center text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50">
-            <svg
-              className="mr-3 h-6 w-6 text-gray-400 group-hover:text-gray-500"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
-              />
-            </svg>
-            Team
-          </a>
-
-          <a
-            className="group flex items-center px-3 py-2 text-sm font-medium text-purple-600 bg-purple-50 border-l-4 border-purple-600"
-            aria-current="page"
-          >
-            <svg
-              className="mr-3 h-6 w-6 text-purple-500"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -132,79 +118,20 @@ const SideMenu = () => (
                 d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
               />
             </svg>
-            Settings
+            Logout
           </a>
         </div>
-      </div>
-      <div className="flex-shrink-0 block w-full">
-        <div className="flex-shrink-0 flex border-t border-gray-200 p-4">
-          <a href="#" className="flex-shrink-0 group block">
-            <div className="flex items-center">
-              <div>
-                <img
-                  className="inline-block h-10 w-10 rounded-full"
-                  src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                  alt=""
-                />
-              </div>
-              <div className="ml-3">
-                <p className="text-base font-medium text-gray-700 group-hover:text-gray-900">
-                  Tom Cook
-                </p>
-                <p className="text-sm font-medium text-gray-500 group-hover:text-gray-700">
-                  View profile
-                </p>
-              </div>
-            </div>
-          </a>
-        </div>
+      </nav>
+    </div>
+  );
+};
 
-        <a className="group rounded-md py-2 px-4 flex items-center text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50">
-          <svg
-            className="mr-3 h-6 w-6 text-gray-400 group-hover:text-gray-500"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            aria-hidden="true"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-          Help
-        </a>
+SideMenu.propTypes = {
+  user: PropTypes.object,
+};
 
-        <a className="group rounded-md py-2 px-4 flex items-center text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50">
-          <svg
-            className="mr-3 h-6 w-6 text-gray-400 group-hover:text-gray-500"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            aria-hidden="true"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-            />
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-            />
-          </svg>
-          Logout
-        </a>
-      </div>
-    </nav>
-  </div>
-);
+const mapStateToProps = (state) => ({
+  user: state.user,
+});
 
-export default SideMenu;
+export default connect(mapStateToProps)(SideMenu);
