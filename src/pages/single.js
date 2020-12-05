@@ -1,15 +1,12 @@
-import React, { useEffect } from 'react';
-import queryString from 'query-string';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import Moment from 'react-moment';
-import styled from 'styled-components';
-import { motion, AnimatePresence } from 'framer-motion';
+import moment from 'moment';
 import { setToken, getAthlete } from '../actions';
 
-import DashboardLayout from '../layouts/dashboard';
 import ActivityDetailMap from '../components/activityDetailMap';
 import RenderLineChart from '../components/activityCharts';
 
@@ -19,11 +16,11 @@ const Single = (props) => {
   const { match } = props;
   const { params } = match;
   const { id } = params;
-  const [loading, setLoading] = React.useState(true);
-  const [activity, setActivity] = React.useState([]);
-  const [activityStream, setActivityStream] = React.useState([]);
+  const [loading, setLoading] = useState(true);
+  const [activity, setActivity] = useState([]);
+  const [activityStream, setActivityStream] = useState([]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const activityFetchUrl = `https://www.strava.com/api/v3/activities/${id}`;
     const activityStreamFetchUrl = `${activityFetchUrl}/streams/watts,altitude,heartrate,latlng,cadence,velocity_smooth?resolution=low`;
     const fetchUrls = [activityFetchUrl, activityStreamFetchUrl];
@@ -41,15 +38,19 @@ const Single = (props) => {
       .then((responses) => Promise.all(responses.map((res) => res.json())))
       .then(([summary, stream]) => {
         setActivity(summary);
-        console.log(stream);
         setActivityStream(stream);
         setLoading(false);
       });
-  }, [props]);
+  }, [id, props]);
 
   if (!activity) {
     return null;
   }
+
+  const activityMovingTime = moment.duration(activity.moving_time, 'seconds');
+  const activityMovingTimeHours = activityMovingTime.get('hours');
+  const activityMovingTimeMinutes = activityMovingTime.get('minutes');
+  const activityMovingTimeSeconds = activityMovingTime.get('seconds');
 
   return (
     <div className="min-h-screen grid grid-cols-2">
@@ -58,7 +59,9 @@ const Single = (props) => {
           <div className="relative pt-8 pb-20 px-4 sm:px-6 lg:pt-8 lg:pb-8 lg:px-8">
             <div className="relative max-w-7xl mx-auto">
               <div className="relative mt-10 px-4 sm:px-6 lg:pt-8 lg:pb-8 lg:px-8 ">
-                <Button label="← Back" />
+                <Link to="/dashboard" key={activity.id}>
+                  <Button label="← Back" />
+                </Link>
 
                 <h2 className="text-3xl tracking-tight font-extrabold text-gray-900 dark:text-gray-200 sm:text-4xl">
                   {activity.name}
@@ -72,18 +75,66 @@ const Single = (props) => {
                     />
                   </time>
                 </div>
-                {/* {activity.start_latlng ? (
-                  <RenderLineChart data={activityStream} />
-                ) : (
-                  <div />
-                )} */}
+                <div className="flex space-x-1 text-sm text-gray-500 mt-3">
+                  {loading === false ? (
+                    <RenderLineChart data={activityStream} />
+                  ) : (
+                    <div />
+                  )}
+                </div>
+
+                <div className="mt-8 overflow-hidden">
+                  <dl className="-mx-8 -mt-8 flex flex-wrap">
+                    <div className="flex flex-col px-8 pt-8">
+                      <dt className="order-2 text-base font-medium text-gray-500">
+                        Distance
+                      </dt>
+                      <dd className="order-1 text-2xl font-extrabold text-indigo-600 sm:text-3xl">
+                        {(activity.distance / 1000).toFixed(1)}
+                      </dd>
+                    </div>
+                    <div className="flex flex-col px-8 pt-8">
+                      <dt className="order-2 text-base font-medium text-gray-500">
+                        Elevation
+                      </dt>
+                      <dd className="order-1 text-2xl font-extrabold text-indigo-600 sm:text-3xl">
+                        {activity.total_elevation_gain} m
+                      </dd>
+                    </div>
+                    <div className="flex flex-col px-8 pt-8">
+                      <dt className="order-2 text-base font-medium text-gray-500">
+                        Duration
+                      </dt>
+                      <dd className="order-1 text-2xl font-extrabold text-indigo-600 sm:text-3xl">
+                        {activityMovingTimeHours}h {activityMovingTimeMinutes}m{' '}
+                        {activityMovingTimeSeconds}s
+                      </dd>
+                    </div>
+                    <div className="flex flex-col px-8 pt-8">
+                      <dt className="order-2 text-base font-medium text-gray-500">
+                        Calories
+                      </dt>
+                      <dd className="order-1 text-2xl font-extrabold text-indigo-600 sm:text-3xl">
+                        {activity.calories}
+                      </dd>
+                    </div>
+                    <div className="flex flex-col px-8 pt-8">
+                      <dt className="order-2 text-base font-medium text-gray-500">
+                        Kudos
+                      </dt>
+                      <dd className="order-1 text-2xl font-extrabold text-indigo-600 sm:text-3xl">
+                        {activity.kudos_count}
+                      </dd>
+                    </div>
+                  </dl>
+                </div>
               </div>
             </div>
           </div>
         </main>
       </div>
 
-      <div className="block relative w-100">
+      <div className="block relative h-100 w-100">
         {activity.start_latlng ? (
           <ActivityDetailMap activitySummary={activity} />
         ) : (

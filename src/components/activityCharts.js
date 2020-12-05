@@ -1,3 +1,4 @@
+// eslint-disable jsx-props-no-spreading
 import {
   ResponsiveContainer,
   ComposedChart,
@@ -24,7 +25,7 @@ const ChartContainer = styled.div`
   position: relative;
 `;
 
-let displayActivityDistanceUnit;
+const displayActivityDistanceUnit = 'km';
 
 const Tick = ({
   payload: { value },
@@ -32,23 +33,22 @@ const Tick = ({
   visibleTicksCount,
   ...rest
 }) => (
-  <text style={{ fontSize: '12px' }} dy={16}>
+  <text style={{ fontSize: '12px' }} {...rest} dy={16}>
     {value} {displayActivityDistanceUnit}
   </text>
 );
 
 Tick.propTypes = {
   payload: PropTypes.object,
-  verticalAnchor: PropTypes.number,
+  verticalAnchor: PropTypes.any,
   visibleTicksCount: PropTypes.any,
 };
 
 const CustomTooltipStyled = styled.div`
-  background: ${(props) => props.theme.colors.cardBackground}};
-  padding: ${(props) => props.theme.tokens.spacing.S.value}
-    ${(props) => props.theme.tokens.spacing.M.value};
+  background: #1f2937;
+  padding: 10px 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
-  border-radius: ${(props) => props.theme.tokens.borderRadius.value};
+  border-radius: 12px;
 
   p {
     margin: 0;
@@ -56,10 +56,8 @@ const CustomTooltipStyled = styled.div`
 `;
 
 const RenderLineChart = (props) => {
-  console.log(props);
   const mediaDarkMode = useMedia('(prefers-color-scheme: dark)');
   const originalArray = props.data;
-  console.log(originalArray);
 
   const [showHeartrate, setShowHeartrate] = React.useState(true);
 
@@ -71,8 +69,6 @@ const RenderLineChart = (props) => {
 
   // distance
 
-  console.log(originalArray);
-
   const distance = originalArray.filter((item) =>
     item.type.includes('distance')
   );
@@ -80,8 +76,6 @@ const RenderLineChart = (props) => {
   const distanceInKm = distanceStream.map((item) => _.round(item / 1000, 2));
 
   const displayDistance = distanceInKm;
-
-  console.log(displayDistance, distanceStream);
 
   // Altitude
   let altitudeStream = [];
@@ -119,22 +113,8 @@ const RenderLineChart = (props) => {
     return _.round(toKPH, 3);
   }
 
-  function KPHtoMPH(kph) {
-    const mph = kph * 0.621371;
-
-    return _.round(mph, 3);
-  }
-
-  function kmToMiles(km) {
-    const mi = km * 0.621371;
-
-    return _.round(mi, 3);
-  }
-
   const speedKPH = _.map(speedStream, toKPH);
-
   const displaySpeed = speedKPH;
-
   const formattedData = displayDistance.map((distance, index) => ({
     distance,
     altitude: altitudeStream[index],
@@ -155,7 +135,7 @@ const RenderLineChart = (props) => {
       return (
         <CustomTooltipStyled>
           <p style={{ opacity: 0.5 }}>
-            Distance: {label} {displayActivityDistanceUnit}
+            distance: {label} {displayActivityDistanceUnit}
           </p>
           {items}
         </CustomTooltipStyled>
@@ -165,11 +145,10 @@ const RenderLineChart = (props) => {
   };
 
   CustomTooltip.propTypes = {
-    payload: PropTypes.object,
-    label: PropTypes.string,
+    payload: PropTypes.any,
+    label: PropTypes.any,
     active: PropTypes.bool,
   };
-  console.log(formattedData);
 
   return (
     <ChartContainer>
@@ -232,7 +211,7 @@ const RenderLineChart = (props) => {
 };
 
 RenderLineChart.propTypes = {
-  data: PropTypes.object,
+  data: PropTypes.any,
 };
 
 export default RenderLineChart;

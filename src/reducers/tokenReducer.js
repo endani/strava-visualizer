@@ -1,9 +1,9 @@
 const initialState = {
   token_type: 'Bearer',
-  expires_at: 1607121946,
-  expires_in: 21112,
+  expires_at: 1607178926,
+  expires_in: 21600,
   refresh_token: 'dd2162403a31c67b4a82c326ee61f7bd30ed7ef8',
-  access_token: '1ddee66f9ce30268a985d1e842cd13d36db8c03a',
+  access_token: '9ac0601b6eb13b5ef293c1e01f57277c899c0b4e',
   athlete: {
     id: 3741352,
     username: 'dani_ramrez',

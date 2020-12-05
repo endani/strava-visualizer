@@ -139,7 +139,22 @@ const Dashboard = (props) => {
                 Latest Activities
               </h2>
               <div className="mt-12 max-w-xl mx-auto grid gap-5 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 xl:max-w-none">
-                {renderActivities}
+                {activities ? (
+                  renderActivities
+                ) : (
+                  <div className="rounded-lg shadow-lg bg-white dark:bg-gray-900 overflow-hidden w-full mx-auto">
+                    <div className="animate-pulse flex space-x-4">
+                      <div className="rounded-full bg-light-blue-400 h-12 w-12" />
+                      <div className="flex-1 space-y-4 py-1">
+                        <div className="h-4 bg-light-blue-400 rounded w-3/4" />
+                        <div className="space-y-2">
+                          <div className="h-4 bg-light-blue-400 rounded" />
+                          <div className="h-4 bg-light-blue-400 rounded w-5/6" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
               <div className="mt-5 flex-1 flex justify-between sm:justify-end">
                 <a className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">

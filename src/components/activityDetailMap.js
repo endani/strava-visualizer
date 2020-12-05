@@ -18,7 +18,6 @@ const ActivityDetailMap = (props) => {
   const mapContainer = React.useRef(null);
   const [map, setMap] = React.useState(null);
   const mediaDarkMode = useMedia('(prefers-color-scheme: dark)');
-  // const [darkMode, setDarkMode] = React.useState(mediaDarkMode)
 
   const decodedPolyline = polyline.toGeoJSON(
     props.activitySummary.map.polyline
@@ -32,19 +31,15 @@ const ActivityDetailMap = (props) => {
     const { mediaDarkMode } = props;
     let mapTheme;
 
-    if (mediaDarkMode) {
-      // console.log("dark mode");
+    if (!mediaDarkMode) {
       mapTheme = 'mapbox://styles/mapbox/dark-v10';
     } else {
-      // console.log("light mode");
       mapTheme = 'mapbox://styles/p0pmaker/cjrf0kzjd4xde2tqwor6ltd0u';
     }
 
     let map;
 
     const initializeMap = () => {
-      // console.log("init map");
-
       map = new mapboxgl.Map({
         container: mapContainer.current,
         style: mapTheme,
