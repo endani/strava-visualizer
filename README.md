@@ -1,6 +1,8 @@
 # Strava Visualizer
-Made by Dani Ramírez on Dec 2020. 
+Strava API wrapper using ReactJS and Tailwind.
 Based on the amazing Banana project by [Jacky Lee](https://github.com/aboutjax)
+
+Made by Dani Ramírez on Dec 2020. 
 
 ### Stack
 
