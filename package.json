@@ -8,7 +8,7 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "autoprefixer": "^10.0.2",
-    "axios": "^0.19.0",
+    "axios": ">=0.21.1",
     "framer-motion": "^2.9.5",
     "lodash": "^4.17.20",
     "mapbox-gl": "^v1.8.1",
