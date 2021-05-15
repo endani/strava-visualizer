@@ -1,17 +1,6 @@
-import styled from 'styled-components';
-import { motion } from 'framer-motion';
 import PropTypes from 'prop-types';
 
-const StyledButton = styled(motion.div)`
-  padding: 10 20;
-  font-weight: 600;
-  text-transform: uppercase;
-  cursor: pointer;
-  display: inline-block;
-  p {
-    margin: 0;
-  }
-`;
+import { StyledButton } from './styled';
 
 const Button = (props) => (
   <StyledButton className="mb-5">
@@ -24,4 +13,5 @@ const Button = (props) => (
 Button.propTypes = {
   label: PropTypes.string,
 };
+
 export default Button;

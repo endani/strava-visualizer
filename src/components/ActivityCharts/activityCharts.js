@@ -2,28 +2,19 @@
 import {
   ResponsiveContainer,
   ComposedChart,
-  LineChart,
-  AreaChart,
   Line,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   Area,
 } from 'recharts';
 import _ from 'lodash';
 import useMedia from 'use-media';
-import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-const ChartContainer = styled.div`
-  padding: 10;
-  margin: 20 0;
-  width: 100%;
-  position: relative;
-`;
+import { ChartContainer, CustomTooltipStyled } from './styled';
 
 const displayActivityDistanceUnit = 'km';
 
@@ -44,31 +35,12 @@ Tick.propTypes = {
   visibleTicksCount: PropTypes.any,
 };
 
-const CustomTooltipStyled = styled.div`
-  background: #1f2937;
-  padding: 10px 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
-  border-radius: 12px;
-
-  p {
-    margin: 0;
-  }
-`;
-
 const RenderLineChart = (props) => {
-  const mediaDarkMode = useMedia('(prefers-color-scheme: dark)');
   const originalArray = props.data;
-
   const [showHeartrate, setShowHeartrate] = React.useState(true);
-
   const displayActivityDistanceUnit = 'km';
-
   const displayActivityTotalElevationGainUnit = 'm';
-
   const displaySpeedUnit = 'kph';
-
-  // distance
-
   const distance = originalArray.filter((item) =>
     item.type.includes('distance')
   );
@@ -76,6 +48,7 @@ const RenderLineChart = (props) => {
   const distanceInKm = distanceStream.map((item) => _.round(item / 1000, 2));
 
   const displayDistance = distanceInKm;
+  const mediaDarkMode = useMedia('(prefers-color-scheme: dark)');
 
   // Altitude
   let altitudeStream = [];

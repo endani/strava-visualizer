@@ -8,9 +8,9 @@ import moment from 'moment';
 import { setToken, getAthlete } from '../actions';
 
 import ActivityDetailMap from '../components/activityDetailMap';
-import RenderLineChart from '../components/activityCharts';
+import RenderLineChart from '../components/ActivityCharts/activityCharts';
 
-import Button from '../components/button';
+import Button from '../components/Button/Button';
 
 const Single = (props) => {
   const { match } = props;
