@@ -11,7 +11,7 @@
     "axios": ">=0.21.1",
     "framer-motion": "^2.9.5",
     "lodash": "^4.17.20",
-    "mapbox-gl": "^v1.8.1",
+    "mapbox-gl": "^v2.7.0",
     "moment": "^2.29.1",
     "postcss": "^8.1.10",
     "prop-types": "^15.7.2",
