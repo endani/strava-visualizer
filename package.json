@@ -29,7 +29,7 @@
     "tailwindcss": "^2.0.1",
     "typescript": "^4.1.2",
     "use-media": "^1.4.0",
-    "web-vitals": "^0.2.4"
+    "web-vitals": "^2.1.4"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
