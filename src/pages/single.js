@@ -49,7 +49,7 @@ const ActivitySingle = (props) => {
     <div className="min-h-screen grid grid-cols-2">
       <div className="col-span-1 bg-gray-50 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-600">
         {isLoading ? (
-          <h2 className="pt-8 text-3xl tracking-tight font-extrabold text-gray-900 dark:text-gray-200 sm:text-4xl">
+          <h2 className="pt-8 pl-8 text-3xl tracking-tight font-extrabold text-gray-900 dark:text-gray-200 sm:text-4xl">
             loading...
           </h2>
         ) : (
