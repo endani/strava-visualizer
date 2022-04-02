@@ -19,9 +19,8 @@
     "@types/react-dom": "^17.0.14",
     "autoprefixer": "^10.0.2",
     "axios": ">=0.21.1",
-    "eslint": "^7.0.0",
     "dotenv": "^16.0.0",
-    "framer-motion": "^2.9.5",
+    "eslint": "^7.0.0",
     "jest": "^27.4.5",
     "lodash": "^4.17.20",
     "mapbox-gl": "^v2.7.0",
@@ -45,6 +44,7 @@
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {
+    "@craco/craco": "^6.4.3",
     "babel-eslint": "^10.1.0",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.5",

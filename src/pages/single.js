@@ -13,7 +13,7 @@ import Button from '../components/button/button'
 const ActivitySingle = (props) => {
   const searchParams = useParams()
   const { id } = searchParams
-  const [loading, setLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true)
   const [activity, setActivity] = useState([])
   const [activityStream, setActivityStream] = useState([])
 
@@ -36,11 +36,9 @@ const ActivitySingle = (props) => {
       .then(([summary, stream]) => {
         setActivity(summary)
         setActivityStream(stream)
-        setLoading(false)
+        setIsLoading(false)
       })
   }, [id, props])
-
-  if (!activity) return null
 
   const activityMovingTime = moment.duration(activity.moving_time, 'seconds')
   const activityMovingTimeHours = activityMovingTime.get('hours')
@@ -50,10 +48,14 @@ const ActivitySingle = (props) => {
   return (
     <div className="min-h-screen grid grid-cols-2">
       <div className="col-span-1 bg-gray-50 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-600">
-        <main className="flex-1 overflow-y-auto focus:outline-none">
-          <div className="relative pt-8 pb-20 px-4 sm:px-6 lg:pt-8 lg:pb-8 lg:px-8">
-            <div className="relative max-w-7xl mx-auto">
-              <div className="relative mt-10 px-4 sm:px-6 lg:pt-8 lg:pb-8 lg:px-8 ">
+        {isLoading ? (
+          <h2 className="pt-8 text-3xl tracking-tight font-extrabold text-gray-900 dark:text-gray-200 sm:text-4xl">
+            loading...
+          </h2>
+        ) : (
+          <main className="flex-1 overflow-y-auto focus:outline-none">
+            <div className="relative pt-8 pb-20 px-4 sm:px-6 lg:pt-8 lg:pb-8 lg:px-8">
+              <div className="relative max-w-7xl mx-auto">
                 <Link to="/activities" key={activity.id}>
                   <Button label="← Back" />
                 </Link>
@@ -71,13 +73,8 @@ const ActivitySingle = (props) => {
                   </time>
                 </div>
                 <div className="flex space-x-1 text-sm text-gray-500 mt-3">
-                  {loading === false ? (
-                    <RenderLineChart data={activityStream} />
-                  ) : (
-                    <div />
-                  )}
+                  <RenderLineChart data={activityStream} />
                 </div>
-
                 <div className="mt-8 overflow-hidden">
                   <dl className="-mx-8 -mt-8 flex flex-wrap">
                     <div className="flex flex-col px-8 pt-8">
@@ -125,8 +122,8 @@ const ActivitySingle = (props) => {
                 </div>
               </div>
             </div>
-          </div>
-        </main>
+          </main>
+        )}
       </div>
 
       <div className="block relative h-100 w-100">

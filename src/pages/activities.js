@@ -7,13 +7,12 @@ import { Link } from 'react-router-dom'
 
 import { getAthlete, setToken } from '../actions'
 import ActivityMap from '../components/map/map'
-import Skeleton from '../components/skeleton/skeleton'
 
 import ActivitiesLayout from './layouts/activities'
 
 let activitiesFetchUrl
 const Activities = (props) => {
-  const [loading, setLoading] = React.useState(true)
+  const [isLoading, setIsLoading] = React.useState(true)
   const [activities, setActivities] = React.useState([])
   const [page] = React.useState('')
   const [, setNextPageUrl] = React.useState('')
@@ -21,7 +20,7 @@ const Activities = (props) => {
   const [, setIsFirstPage] = React.useState(true)
 
   useEffect(() => {
-    setLoading(true)
+    setIsLoading(true)
     const { search } = window.location
     const params = queryString.parse(search)
 
@@ -63,7 +62,7 @@ const Activities = (props) => {
       })
       .then((json) => {
         setActivities(json)
-        setLoading(false)
+        setIsLoading(false)
       })
   }, [props, page])
 
@@ -108,23 +107,6 @@ const Activities = (props) => {
     renderActivities = <h3 className="text-white">No activities found</h3>
   }
 
-  const Pagination = () => (
-    <div className="mt-5 flex-1 flex justify-between sm:justify-end">
-      <a
-        href="/"
-        className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
-      >
-        Previous
-      </a>
-      <a
-        href="/"
-        className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
-      >
-        Next
-      </a>
-    </div>
-  )
-
   return (
     <ActivitiesLayout>
       <main className="flex-1 flex-col flex overflow-y-auto focus:outline-none bg-white dark:bg-gray-800">
@@ -135,9 +117,14 @@ const Activities = (props) => {
                 Latest Activities
               </h2>
               <div className="mt-12 max-w-xl mx-auto grid gap-5 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 xl:max-w-none">
-                {!loading ? renderActivities : <Skeleton />}
+                {!isLoading ? (
+                  renderActivities
+                ) : (
+                  <p className="text-base animate-pulse text-white transform">
+                    loading activities ...
+                  </p>
+                )}
               </div>
-              <Pagination />
             </div>
           </div>
         </div>
