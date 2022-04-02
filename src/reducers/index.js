@@ -1,7 +1,8 @@
-import { combineReducers } from 'redux';
-import tokenReducer from './tokenReducer';
-import userReducer from './userReducer';
-import activitiesReducer from './activitiesReducer';
+import { combineReducers } from "redux";
+
+import tokenReducer from "./token";
+import userReducer from "./user";
+import activitiesReducer from "./activity";
 
 export default combineReducers({
   token: tokenReducer,

@@ -1,56 +1,52 @@
-import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import moment from 'moment'
+import PropTypes from 'prop-types'
+import { useEffect, useState } from 'react'
+import Moment from 'react-moment'
+import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 
-import Moment from 'react-moment';
-import moment from 'moment';
-import { setToken, getAthlete } from '../actions';
+import { getAthlete, setToken } from '../actions'
+import ActivityDetailMap from '../components/activity-card/activity-card'
+import RenderLineChart from '../components/activity-chart/activity-chart'
+import Button from '../components/button/button'
 
-import ActivityDetailMap from '../components/activityDetailMap';
-import RenderLineChart from '../components/activityCharts';
-
-import Button from '../components/button';
-
-const Single = (props) => {
-  const { match } = props;
-  const { params } = match;
-  const { id } = params;
-  const [loading, setLoading] = useState(true);
-  const [activity, setActivity] = useState([]);
-  const [activityStream, setActivityStream] = useState([]);
+const ActivitySingle = (props) => {
+  const { match } = props
+  const { params } = match
+  const { id } = params
+  const [loading, setLoading] = useState(true)
+  const [activity, setActivity] = useState([])
+  const [activityStream, setActivityStream] = useState([])
 
   useEffect(() => {
-    const activityFetchUrl = `https://www.strava.com/api/v3/activities/${id}`;
-    const activityStreamFetchUrl = `${activityFetchUrl}/streams/watts,altitude,heartrate,latlng,cadence,velocity_smooth?resolution=low`;
-    const fetchUrls = [activityFetchUrl, activityStreamFetchUrl];
+    const activityFetchUrl = `https://www.strava.com/api/v3/activities/${id}`
+    const activityStreamFetchUrl = `${activityFetchUrl}/streams/watts,altitude,heartrate,latlng,cadence,velocity_smooth?resolution=low`
+    const fetchUrls = [activityFetchUrl, activityStreamFetchUrl]
     Promise.all(
       fetchUrls.map((url) =>
         fetch(url, {
           method: 'get',
           headers: {
             'content-type': 'application/json',
-            authorization: `Bearer ${props.token.access_token}`,
+            'authorization': `Bearer ${props.token.access_token}`,
           },
         })
       )
     )
       .then((responses) => Promise.all(responses.map((res) => res.json())))
       .then(([summary, stream]) => {
-        setActivity(summary);
-        setActivityStream(stream);
-        setLoading(false);
-      });
-  }, [id, props]);
+        setActivity(summary)
+        setActivityStream(stream)
+        setLoading(false)
+      })
+  }, [id, props])
 
-  if (!activity) {
-    return null;
-  }
+  if (!activity) return null
 
-  const activityMovingTime = moment.duration(activity.moving_time, 'seconds');
-  const activityMovingTimeHours = activityMovingTime.get('hours');
-  const activityMovingTimeMinutes = activityMovingTime.get('minutes');
-  const activityMovingTimeSeconds = activityMovingTime.get('seconds');
+  const activityMovingTime = moment.duration(activity.moving_time, 'seconds')
+  const activityMovingTimeHours = activityMovingTime.get('hours')
+  const activityMovingTimeMinutes = activityMovingTime.get('minutes')
+  const activityMovingTimeSeconds = activityMovingTime.get('seconds')
 
   return (
     <div className="min-h-screen grid grid-cols-2">
@@ -59,7 +55,7 @@ const Single = (props) => {
           <div className="relative pt-8 pb-20 px-4 sm:px-6 lg:pt-8 lg:pb-8 lg:px-8">
             <div className="relative max-w-7xl mx-auto">
               <div className="relative mt-10 px-4 sm:px-6 lg:pt-8 lg:pb-8 lg:px-8 ">
-                <Link to="/dashboard" key={activity.id}>
+                <Link to="/activities" key={activity.id}>
                   <Button label="← Back" />
                 </Link>
 
@@ -142,16 +138,18 @@ const Single = (props) => {
         )}
       </div>
     </div>
-  );
-};
+  )
+}
 
-Single.propTypes = {
+ActivitySingle.propTypes = {
   token: PropTypes.object,
   match: PropTypes.object,
-};
+}
 
 const mapStateToProps = (state) => ({
   token: state.token,
-});
+})
 
-export default connect(mapStateToProps, { setToken, getAthlete })(Single);
+export default connect(mapStateToProps, { setToken, getAthlete })(
+  ActivitySingle
+)
