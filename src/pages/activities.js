@@ -15,15 +15,14 @@ let activitiesFetchUrl
 const Activities = (props) => {
   const [loading, setLoading] = React.useState(true)
   const [activities, setActivities] = React.useState([])
-  const page = ''
+  const [page] = React.useState('')
   const [, setNextPageUrl] = React.useState('')
   const [, setPreviousPageUrl] = React.useState('')
   const [, setIsFirstPage] = React.useState(true)
 
   useEffect(() => {
     setLoading(true)
-    const { location } = props
-    const { search } = location
+    const { search } = window.location
     const params = queryString.parse(search)
 
     const getToken = async (code) => {
@@ -112,13 +111,13 @@ const Activities = (props) => {
   const Pagination = () => (
     <div className="mt-5 flex-1 flex justify-between sm:justify-end">
       <a
-        href="/Previous"
+        href="/"
         className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
       >
         Previous
       </a>
       <a
-        href="/next"
+        href="/"
         className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
       >
         Next

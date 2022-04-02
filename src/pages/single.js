@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { useEffect, useState } from 'react'
 import Moment from 'react-moment'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 
 import { getAthlete, setToken } from '../actions'
 import ActivityDetailMap from '../components/activity-card/activity-card'
@@ -11,9 +11,8 @@ import RenderLineChart from '../components/activity-chart/activity-chart'
 import Button from '../components/button/button'
 
 const ActivitySingle = (props) => {
-  const { match } = props
-  const { params } = match
-  const { id } = params
+  const searchParams = useParams()
+  const { id } = searchParams
   const [loading, setLoading] = useState(true)
   const [activity, setActivity] = useState([])
   const [activityStream, setActivityStream] = useState([])
