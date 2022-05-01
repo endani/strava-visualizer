@@ -1,12 +1,10 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import { useAuth } from '../../utils/auth-context'
 
-const SideMenu = (props) => {
-  const { user } = props
-  if (!user) {
-    return null
-  }
+const SideMenu = () => {
+  const { authData } = useAuth()
+
+  if (!authData) return null
+
   return (
     <div className="w-90 flex-col hidden sm:flex">
       <nav className="bg-gray-50 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-600 pt-5 pb-4 flex flex-col flex-grow overflow-y-auto">
@@ -15,12 +13,12 @@ const SideMenu = (props) => {
             <div className="mx-auto sm:px-6 lg:pt-8 lg:pb-8 lg:px-8">
               <img
                 className="hidden h-32 w-32 rounded-full sm:block m-auto"
-                src={user.profile}
+                src={authData.profilePictureUrl}
                 alt=""
               />
               <div className="flex items-center">
                 <h4 className="m-auto mt-5 text-2xl font-bold leading-7 text-gray-900 dark:text-gray-200 sm:leading-9 sm:truncate">
-                  {user.firstname} {user.lastname}
+                  {authData.firstname} {authData.lastname}
                 </h4>
               </div>
               <dl className="mt-10 flex flex-col sm:ml-3 sm:mt-1 sm:flex-row sm:flex-wrap">
@@ -39,7 +37,7 @@ const SideMenu = (props) => {
                       clipRule="evenodd"
                     />
                   </svg>
-                  {user.city}
+                  {authData.city}
                 </dd>
                 <dt className="sr-only">Account status</dt>
                 <dd className="mt-3 flex items-center text-sm text-gray-500 font-medium sm:mr-6 sm:mt-0 capitalize">
@@ -60,25 +58,6 @@ const SideMenu = (props) => {
                 </dd>
               </dl>
             </div>
-
-            <dl className="rounded-lg sm:grid sm:grid-cols-2">
-              <div className="flex flex-col border-b border-gray-100 p-6 plr-10 text-center sm:border-0 sm:border-r dark:border-gray-600">
-                <dt className="order-2 mt-2 text-lg leading-6 font-medium text-gray-500">
-                  Following
-                </dt>
-                <dd className="order-1 text-5xl font-extrabold text-indigo-600 dark:text-gray-200">
-                  {user.friend_count}
-                </dd>
-              </div>
-              <div className="flex flex-col border-t border-b border-gray-100 p-6 plr-10 text-center sm:border-0 ">
-                <dt className="order-2 mt-2 text-lg leading-6 font-medium text-gray-500">
-                  Followers
-                </dt>
-                <dd className="order-1 text-5xl font-extrabold text-indigo-600 dark:text-gray-200">
-                  {user.follower_count}
-                </dd>
-              </div>
-            </dl>
           </div>
         </div>
       </nav>
@@ -86,12 +65,4 @@ const SideMenu = (props) => {
   )
 }
 
-SideMenu.propTypes = {
-  user: PropTypes.object,
-}
-
-const mapStateToProps = (state) => ({
-  user: state.user,
-})
-
-export default connect(mapStateToProps)(SideMenu)
+export { SideMenu }

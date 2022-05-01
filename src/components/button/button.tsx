@@ -1,6 +1,4 @@
-import PropTypes from 'prop-types'
-
-const Button = (props) => (
+const Button = (props: any) => (
   <button
     type="button"
     className="inline-flex items-center px-4 py-2 mb-10 border border-transparent text-xs font-medium rounded text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -9,7 +7,4 @@ const Button = (props) => (
   </button>
 )
 
-Button.propTypes = {
-  label: PropTypes.string,
-}
-export default Button
+export { Button }

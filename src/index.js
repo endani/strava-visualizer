@@ -1,25 +1,23 @@
-import "./assets/main.css"
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { Route, Routes, BrowserRouter as Router } from 'react-router-dom'
 
-import React from "react"
-import ReactDOM from "react-dom"
-import { Provider } from "react-redux"
-import { applyMiddleware, compose, createStore } from "redux"
-import thunk from "redux-thunk"
+import { App } from './App'
+import { AuthProvider } from './utils/auth-context'
+import { Login } from './pages/login'
 
-import App from "./App"
-import reducers from "./reducers"
-
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
-const store = createStore(
-  reducers,
-  /* preloadedState, */ composeEnhancers(applyMiddleware(thunk))
-)
+import './assets/main.css'
 
 ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
-  document.getElementById("root")
+  <React.StrictMode>
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/*" element={<App />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
+  </React.StrictMode>,
+  document.getElementById('root')
 )
-
-export default store

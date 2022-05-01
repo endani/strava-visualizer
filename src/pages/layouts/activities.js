@@ -1,8 +1,8 @@
-import PropTypes from "prop-types"
-import React from "react"
-import tw from "tailwind-styled-components"
+import PropTypes from 'prop-types'
+import React from 'react'
+import tw from 'tailwind-styled-components'
 
-import SideMenu from "../../components/side-menu/sidemenu"
+import { SideMenu } from '../../components/side-menu/sidemenu'
 
 const ActivitiesWrapper = tw.div`
   h-screen 
@@ -10,21 +10,15 @@ const ActivitiesWrapper = tw.div`
   flex
 `
 
-const TopMenuWrapper = tw.div`
-  flex-1 
-  flex 
-  flex-col
-`
-
-const Activities = ({ children }) => (
+const ActivitiesLayout = ({ children }) => (
   <ActivitiesWrapper>
     <SideMenu />
-    <TopMenuWrapper>{children}</TopMenuWrapper>
+    {children}
   </ActivitiesWrapper>
 )
 
-Activities.propTypes = {
+ActivitiesLayout.propTypes = {
   children: PropTypes.object,
 }
 
-export default Activities
+export { ActivitiesLayout }

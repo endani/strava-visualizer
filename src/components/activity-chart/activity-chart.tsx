@@ -9,70 +9,71 @@ import {
   Tooltip,
   Area,
 } from 'recharts'
-import _ from 'lodash'
+import { round, map } from 'lodash'
 import useMedia from 'use-media'
-import styled from 'styled-components'
-import PropTypes from 'prop-types'
-import React from 'react'
 
-const ChartContainer = styled.div`
-  padding: 10;
-  margin: 20 0;
-  width: 100%;
-  position: relative;
-`
+import { ChartContainer, CustomTooltipStyled } from './styled'
 
-const displayActivityDistanceUnit = 'km'
+const DISPLAY_ACTIVITY_DISTANCE_UNIT = 'km'
 
 const Tick = ({
   payload: { value },
   verticalAnchor,
   visibleTicksCount,
   ...rest
+}: {
+  payload: { value?: number }
+  verticalAnchor?: string
+  visibleTicksCount?: number
 }) => (
   <text style={{ fontSize: '12px' }} {...rest} dy={16}>
-    {value} {displayActivityDistanceUnit}
+    {value} {DISPLAY_ACTIVITY_DISTANCE_UNIT}
   </text>
 )
 
-Tick.propTypes = {
-  payload: PropTypes.object,
-  verticalAnchor: PropTypes.any,
-  visibleTicksCount: PropTypes.any,
+const CustomTooltip = (props: any) => {
+  const { payload, label, active } = props
+  const DISPLAY_ACTIVITY_DISTANCE_UNIT = 'km'
+
+  const items = payload.map((item: any) => (
+    <p style={{ color: item.stroke }} key={item.name}>
+      {item.name}: {item.value} {item.unit}
+    </p>
+  ))
+
+  if (active) {
+    return (
+      <CustomTooltipStyled>
+        <p style={{ opacity: 0.5 }}>
+          distance: {label} {DISPLAY_ACTIVITY_DISTANCE_UNIT}
+        </p>
+        {items}
+      </CustomTooltipStyled>
+    )
+  }
+  return <div />
 }
 
-const CustomTooltipStyled = styled.div`
-  background: #1f2937;
-  padding: 10px 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
-  border-radius: 12px;
-
-  p {
-    margin: 0;
-  }
-`
-
-const RenderLineChart = (props) => {
+const RenderLineChart = (props: any) => {
   const mediaDarkMode = useMedia('(prefers-color-scheme: dark)')
   const originalArray = props.data
   const showHeartrate = true
-  const displayActivityDistanceUnit = 'km'
   const displayActivityTotalElevationGainUnit = 'm'
   const displaySpeedUnit = 'kph'
 
   // distance
 
-  const distance = originalArray.filter((item) =>
+  const distance = originalArray.filter((item: any) =>
     item.type.includes('distance')
   )
   const distanceStream = distance[0].data
-  const distanceInKm = distanceStream.map((item) => _.round(item / 1000, 2))
+  const distanceInKm = distanceStream.map((item: any) => round(item / 1000, 2))
 
   const displayDistance = distanceInKm
 
   // Altitude
-  let altitudeStream = []
-  const altitude = originalArray.filter((item) =>
+  let altitudeStream: any = []
+  const altitude = originalArray.filter((item: any) =>
     item.type.includes('altitude')
   )
   if (altitude.length > 0) {
@@ -80,8 +81,8 @@ const RenderLineChart = (props) => {
   }
 
   // heartrate
-  let heartrateStream = []
-  const heartrate = originalArray.filter((item) =>
+  let heartrateStream: any = []
+  const heartrate = originalArray.filter((item: any) =>
     item.type.includes('heartrate')
   )
   if (heartrate.length > 0) {
@@ -90,7 +91,7 @@ const RenderLineChart = (props) => {
 
   // speed
   let speedStream = []
-  const speed = originalArray.filter((item) =>
+  const speed = originalArray.filter((item: any) =>
     item.type.includes('velocity_smooth')
   )
 
@@ -99,49 +100,23 @@ const RenderLineChart = (props) => {
   }
 
   // Unit conversion function
-  function toKPH(m) {
+  function toKPH(m: number) {
     const toKM = m / 1000
     const toKPH = toKM * 60 * 60
 
-    return _.round(toKPH, 3)
+    return round(toKPH, 3)
   }
 
-  const speedKPH = _.map(speedStream, toKPH)
+  const speedKPH = map(speedStream, toKPH)
   const displaySpeed = speedKPH
-  const formattedData = displayDistance.map((distance, index) => ({
-    distance,
-    altitude: altitudeStream[index],
-    heartrate: heartrateStream[index],
-    speed: displaySpeed[index],
-  }))
-
-  const CustomTooltip = (props) => {
-    const { payload, label, active } = props
-
-    const items = payload.map((item) => (
-      <p style={{ color: item.stroke }} key={item.name}>
-        {item.name}: {item.value} {item.unit}
-      </p>
-    ))
-
-    if (active) {
-      return (
-        <CustomTooltipStyled>
-          <p style={{ opacity: 0.5 }}>
-            distance: {label} {displayActivityDistanceUnit}
-          </p>
-          {items}
-        </CustomTooltipStyled>
-      )
-    }
-    return <div />
-  }
-
-  CustomTooltip.propTypes = {
-    payload: PropTypes.any,
-    label: PropTypes.any,
-    active: PropTypes.bool,
-  }
+  const formattedData = displayDistance.map(
+    (distance: number, index: number) => ({
+      distance,
+      altitude: altitudeStream[index],
+      heartrate: heartrateStream[index],
+      speed: displaySpeed[index],
+    })
+  )
 
   return (
     <ChartContainer>
@@ -150,16 +125,16 @@ const RenderLineChart = (props) => {
           <Tooltip content={<CustomTooltip />} />
           <CartesianGrid />
           <XAxis
-            tick={<Tick />}
+            tick={<Tick payload={{ value: 0 }} />}
             type="number"
             domain={[0, 'dataMax']}
-            interval="Number"
+            // interval="Number"
             allowDecimals
             dataKey="distance"
             minTickGap={20}
           />
           <YAxis
-            tick={<Tick />}
+            tick={<Tick payload={{ value: 0 }} />}
             minTickGap={30}
             type="number"
             dataKey="altitude"
@@ -203,8 +178,4 @@ const RenderLineChart = (props) => {
   )
 }
 
-RenderLineChart.propTypes = {
-  data: PropTypes.any,
-}
-
-export default RenderLineChart
+export { RenderLineChart }

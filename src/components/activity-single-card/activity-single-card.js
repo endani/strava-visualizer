@@ -12,11 +12,14 @@ const style = {
   position: 'absolute',
 }
 
-const ActivityDetailMap = (props) => {
+const ActivitySingleCard = (props) => {
+  console.log(props)
   const mapContainer = React.useRef(null)
   const [, setMap] = React.useState(null)
 
-  const decodedPolyline = polyline.toGeoJSON(props.activitySummary.map.polyline)
+  const decodedPolyline = polyline.toGeoJSON(
+    props.activitySummary.map.summary_polyline
+  )
   const decodedPolylineCoordinates = decodedPolyline.coordinates
 
   mapboxgl.accessToken = process.env.REACT_APP_MAPBOX
@@ -139,9 +142,9 @@ const ActivityDetailMap = (props) => {
   return <div style={style} ref={(el) => (mapContainer.current = el)} />
 }
 
-ActivityDetailMap.propTypes = {
+ActivitySingleCard.propTypes = {
   activitySummary: PropTypes.object,
   mediaDarkMode: PropTypes.bool,
 }
 
-export default ActivityDetailMap
+export default ActivitySingleCard

@@ -61,8 +61,8 @@ const ActivityMap = (props) => {
 }
 
 ActivityMap.propTypes = {
-  type: PropTypes.object,
-  polyline: PropTypes.object,
+  type: PropTypes.string,
+  polyline: PropTypes.string,
   mediaDarkMode: PropTypes.bool,
 }
 
