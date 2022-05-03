@@ -16,8 +16,22 @@ jobs:
         with:
           node-version: 14
 
+      - name: Get yarn cache
+        uses: actions/cache@v3
+        id: yarn-cache
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}-${{ hashFiles('.github/workflows/**.yml') }}
+
       - name: Install Dependencies
-        run: yarn install
+        if: steps.yarn-cache.outputs.cache.hit != 'true'
+        run: yarn install --frozen-lockfile
 
       - name: Lint
         run: yarn lint
+
+      - name: Build
+        run: yarn build
+
+      - name: Test
+        run: yarn test

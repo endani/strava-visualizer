@@ -3,11 +3,12 @@
   "version": "1.0.1",
   "private": true,
   "scripts": {
-    "start": "npm run watch:css && craco start",
     "build": "npm run watch:css && craco build",
-    "watch:css": "postcss src/assets/tailwind.css -o src/assets/main.css",
+    "lint:fix": "eslint . --fix",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "start": "npm run watch:css && craco start",
+    "test": "jest --passWithNoTests",
+    "watch:css": "postcss src/assets/tailwind.css -o src/assets/main.css"
   },
   "prettier": "@typeform/eslint-config/prettier",
   "dependencies": {
@@ -21,7 +22,6 @@
     "axios": ">=0.21.1",
     "dotenv": "^16.0.0",
     "eslint": "^7.0.0",
-    "jest": "^27.4.5",
     "lodash": "^4.17.20",
     "mapbox-gl": "^v2.7.0",
     "moment": "^2.29.1",
@@ -55,7 +55,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.21.4",
     "eslint-plugin-react-hooks": "^4.1.2",
-    "jest": "^24.9.0",
+    "jest": "^27.4.5",
     "postcss-cli": "^9.1.0",
     "prettier": "^2.6.0",
     "react-query": "^3.34.19",
