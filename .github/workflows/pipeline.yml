@@ -21,7 +21,7 @@ jobs:
         id: yarn-cache
         with:
           path: node_modules
-          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}-${{ hashFiles('.github/workflows/**.yml') }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock','.github/workflows/**.yml') }}
 
       - name: Install Dependencies
         if: steps.yarn-cache.outputs.cache.hit != 'true'

@@ -21,10 +21,10 @@ const ActivitySingle = () => {
 
   if (isLoadingActivity || isLoadingStream) return null
 
-  // const activityMovingTime = moment.duration(activity.moving_time, 'seconds')
-  // const activityMovingTimeHours = activityMovingTime.get('hours')
-  // const activityMovingTimeMinutes = activityMovingTime.get('minutes')
-  // const activityMovingTimeSeconds = activityMovingTime.get('seconds')
+  const activityMovingTime = moment.duration(activity.moving_time, 'seconds')
+  const activityMovingTimeHours = activityMovingTime.get('hours')
+  const activityMovingTimeMinutes = activityMovingTime.get('minutes')
+  const activityMovingTimeSeconds = activityMovingTime.get('seconds')
 
   return (
     <div className="min-h-screen grid grid-cols-2">
@@ -75,19 +75,19 @@ const ActivitySingle = () => {
                     <dt className="order-2 text-base font-medium text-gray-500">
                       Duration
                     </dt>
-                    {/* <dd className="order-1 text-2xl font-extrabold text-indigo-600 sm:text-3xl">
+                    <dd className="order-1 text-2xl font-extrabold text-indigo-600 sm:text-3xl">
                       {activityMovingTimeHours}h {activityMovingTimeMinutes}m{' '}
                       {activityMovingTimeSeconds}s
-                    </dd> */}
+                    </dd>
                   </div>
-                  {/* <div className="flex flex-col px-8 pt-8">
+                  <div className="flex flex-col px-8 pt-8">
                     <dt className="order-2 text-base font-medium text-gray-500">
                       Calories
                     </dt>
                     <dd className="order-1 text-2xl font-extrabold text-indigo-600 sm:text-3xl">
                       {activity.calories}
                     </dd>
-                  </div> */}
+                  </div>
                   <div className="flex flex-col px-8 pt-8">
                     <dt className="order-2 text-base font-medium text-gray-500">
                       Kudos
