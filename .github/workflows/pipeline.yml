@@ -1,11 +1,24 @@
 name: Deployment Pipeline
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize]
 
 jobs:
-  deploy:
+  avoid_redundancy:
+    name: 'Avoid Redundancy'
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Cancel Previous Builds
+        uses: styfle/cancel-workflow-action@0.9.1
+        with:
+          access_token: ${{ github.token }}
+
+  lint:
+    name: 'Check Lint'
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v3
@@ -30,8 +43,65 @@ jobs:
       - name: Lint
         run: yarn lint
 
+  build:
+    name: 'Build'
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 14
+
+      - name: Get yarn cache
+        uses: actions/cache@v3
+        id: yarn-cache
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock','.github/workflows/**.yml') }}
+
+      - name: Install Dependencies
+        if: steps.yarn-cache.outputs.cache.hit != 'true'
+        run: yarn install --frozen-lockfile
+
       - name: Build
         run: yarn build
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: build
+
+  test:
+    name: 'Test'
+    runs-on: ubuntu-18.04
+    needs: [lint, build]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 14
+
+      - name: Get yarn cache
+        uses: actions/cache@v3
+        id: yarn-cache
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock','.github/workflows/**.yml') }}
+
+      - name: Install Dependencies
+        if: steps.yarn-cache.outputs.cache.hit != 'true'
+        run: yarn install --frozen-lockfile
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: build
+          path: build
 
       - name: Test
         run: yarn test
