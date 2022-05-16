@@ -17,7 +17,7 @@
     "@types/jest": "^27.0.23",
     "@types/node": "^17.0.31",
     "@types/react": "^17.0.41",
-    "@types/react-dom": "^17.0.14",
+    "@types/react-dom": "^18.0.4",
     "autoprefixer": "^10.0.2",
     "axios": ">=0.21.1",
     "dotenv": "^16.0.0",
