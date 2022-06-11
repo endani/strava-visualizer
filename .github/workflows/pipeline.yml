@@ -110,3 +110,34 @@ jobs:
 
       - name: Test
         run: yarn test
+
+  release:
+    name: 'Release'
+    runs-on: ubuntu-18.04
+    needs: [lint, build, test]
+    if: contains(github.ref, 'refs/heads/main')
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 14
+
+      - name: Get yarn cache
+        uses: actions/cache@v3
+        id: yarn-cache
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock','.github/workflows/**.yml') }}
+
+      - name: Install Dependencies
+        if: steps.yarn-cache.outputs.cache.hit != 'true'
+        run: yarn install --frozen-lockfile
+
+      - name: Release
+        run: yarn run semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
