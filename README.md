@@ -26,7 +26,7 @@ You can check if you have it installed by running:
 npm -v
 ```
 
-It must return something like `6.14.8`
+It must return something like `6.14.13`
 
 ## Installation
 
