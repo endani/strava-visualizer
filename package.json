@@ -62,7 +62,7 @@
     "react-query": "^3.34.19",
     "react-query-devtools": "^2.6.3",
     "tailwind-styled-components": "^2.1.4",
-    "semantic-release": "^19.0.3"
+    "semantic-release": "^20.1.1"
   },
   "eslintConfig": {
     "extends": [
