@@ -42,7 +42,7 @@
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {
-    "@craco/craco": "^6.4.3",
+    "@craco/craco": "^7.1.0",
     "@types/lodash": "^4.14.182",
     "babel-eslint": "^10.1.0",
     "enzyme": "^3.11.0",
