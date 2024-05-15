@@ -1,19 +1,19 @@
 import axios, { AxiosRequestConfig } from 'axios'
 
-import { useAuth } from './auth-context'
-
 export const API_BASE_URL = 'https://www.strava.com'
 
 const useAuthenticatedGet = (path: string, config: AxiosRequestConfig = {}) => {
-  const {
-    authData: { token },
-  } = useAuth()
   return async () => {
+    const data = JSON.parse(localStorage.getItem('strava-ai') as string) as any
+    const { access_token } = data?.auth || {}
+
+    if (!access_token) return []
+
     const result = await axios.get(API_BASE_URL + path, {
       ...config,
       params: { ...config.params },
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${access_token}`,
       },
     })
 
@@ -21,7 +21,7 @@ const useAuthenticatedGet = (path: string, config: AxiosRequestConfig = {}) => {
   }
 }
 
-const useAuthenticatedPost = async (
+const usingAuthenticatedPost = async (
   path: string,
   config: AxiosRequestConfig = {}
 ) => {
@@ -31,4 +31,4 @@ const useAuthenticatedPost = async (
   return result.data
 }
 
-export { useAuthenticatedGet, useAuthenticatedPost }
+export { useAuthenticatedGet, usingAuthenticatedPost }

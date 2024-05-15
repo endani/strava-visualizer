@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types'
 
 import { MapImageLarge, MapImageSmall } from './styled'
 
@@ -58,12 +57,6 @@ const ActivityMap = (props) => {
       </MapImageSmall>
     </>
   )
-}
-
-ActivityMap.propTypes = {
-  type: PropTypes.string,
-  polyline: PropTypes.string,
-  mediaDarkMode: PropTypes.bool,
 }
 
 export default ActivityMap

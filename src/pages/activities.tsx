@@ -1,35 +1,105 @@
-import React from 'react'
+import { useEffect, useState } from 'react'
+import Head from 'next/head'
 
-import { ActivityCard } from '../components/activity-card/activity-card'
-import { useGetActivities } from '../api/api'
+import { useGetActivities } from '@/api'
+import { ActivityCard, ActivityFilters } from '@/components'
+import { Activity } from '@/types'
+import { isEmpty } from 'lodash'
 
-import { ActivitiesLayout } from './layouts/activities'
+const filterActivities = (activities: Activity[]) =>
+  activities.filter(
+    (activity: Activity) =>
+      activity.distance && ['Run', 'Ride', 'Workout'].includes(activity.type)
+  )
 
 const Activities = () => {
-  const { data: activities } = useGetActivities()
+  const { data: activitiesFromStrava } = useGetActivities()
 
-  if (!activities) return <h3 className="text-white">No activities found</h3>
+  const [activities, setActivities] = useState<Activity[]>(activitiesFromStrava)
+
+  useEffect(() => {
+    setActivities(activitiesFromStrava)
+  }, [activitiesFromStrava])
+
+  const handleFilter = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = event.target
+
+    if (isEmpty(value)) {
+      setActivities(filterActivities(activitiesFromStrava))
+      return
+    }
+
+    const filteredActivities: Activity[] = activities.filter(
+      (activity: Activity) =>
+        activity.name.toLowerCase().includes(value.toLowerCase()) ||
+        activity.distance
+          .toString()
+          .toLowerCase()
+          .includes(value.toLowerCase()) ||
+        activity.type.toLowerCase().includes(value.toLowerCase())
+    )
+
+    setActivities(filteredActivities)
+  }
 
   return (
-    <ActivitiesLayout>
-      <main className="flex-1 flex-col flex overflow-y-auto focus:outline-none bg-white dark:bg-gray-800">
-        <div className="pt-8 pb-20 px-4 sm:px-6 lg:pt-8 lg:pb-8 lg:px-8">
-          <div className="relative max-w-7xl mx-auto">
-            <div className="relative mt-10 px-4 sm:px-6 lg:pt-8 lg:pb-8 lg:px-8 ">
-              <h2 className="text-3xl tracking-tight font-extrabold text-gray-900 dark:text-gray-200 sm:text-4xl">
-                Latest Activities
+    <>
+      <Head>
+        <title>Activities</title>
+        <meta
+          name="description"
+          content="Get the most out of your Strava data with Strava Visualizer."
+        />
+      </Head>
+      <main>
+        <div className="bg-white py-24 sm:py-32">
+          <div className="mx-auto max-w-7xl px-6 lg:px-8">
+            <div className="mx-auto max-w-2xl text-center">
+              <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+                Activities
               </h2>
-              <div className="mt-12 max-w-xl mx-auto grid gap-5 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 xl:max-w-none">
-                {activities.map((item: any) => (
-                  <ActivityCard activity={item} key={item.id} />
-                ))}
+              <p className="mt-2 text-lg leading-8 text-gray-600">
+                Here are the last activities from your Strava account.
+              </p>
+            </div>
+
+            <ActivityFilters onFilterChange={handleFilter} />
+
+            {/* { && !activities.length && (
+              <div className="mx-auto text-center mt-16">
+                <Spinner
+                  sx={{
+                    margin: 'auto',
+                    width: '100px',
+                  }}
+                />
               </div>
+            )} */}
+
+            {!activities && (
+              <div className="mx-auto text-center mt-16">
+                <p className="mt-2 text-lg leading-8 text-gray-600">
+                  We have not found any results.
+                </p>
+              </div>
+            )}
+            <div className="mx-auto text-center mt-16 grid max-w-2xl auto-rows-fr grid-cols-1 gap-8 sm:mt-20 lg:mx-0 lg:max-w-none lg:grid-cols-3">
+              {activities &&
+                activities.map((activity: any) => (
+                  <ActivityCard
+                    href={`/activities/${activity.id}`}
+                    activity={activity}
+                    key={activity.id}
+                  />
+                ))}
             </div>
           </div>
         </div>
       </main>
-    </ActivitiesLayout>
+    </>
   )
 }
 
-export { Activities }
+export default Activities

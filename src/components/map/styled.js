@@ -10,7 +10,7 @@ const Map = styled.div`
 
 const MapImageLarge = styled.div`
   width: 190px;
-  height: 190px;
+  // height: 190px;
 `
 
 const MapImageSmall = styled.div`

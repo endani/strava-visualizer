@@ -1,0 +1,27 @@
+{
+  "extends": ["eslint:recommended", "next/core-web-vitals"],
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es2021": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 12
+  },
+  "rules": {
+    "no-undef": "off",
+    "no-console": "off",
+    "no-unused-vars": "off"
+  },
+  "overrides": [
+    // based on this issue https://github.com/typescript-eslint/typescript-eslint/issues/1197#issuecomment-552966006
+    // the default rule 'no-unused-vars' has problems understanding typescript
+    // for example raising false positives on enums
+    {
+      "files": ["*.ts", "*.tsx"],
+      "rules": {
+        "no-unused-vars": "off"
+      }
+    }
+  ]
+}
