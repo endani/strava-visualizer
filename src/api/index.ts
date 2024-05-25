@@ -1,5 +1,3 @@
-import { useQuery } from 'react-query'
-
 import { useAuthenticatedGet, usingAuthenticatedPost } from '@/utils/api'
 import { Activity } from '@/types'
 const API_CLIENT = process.env.stravaClient
@@ -21,51 +19,33 @@ export const getStravaToken = async (code: string) => {
   return tokenData
 }
 
-const useGetAthlete = (token: any) => {
-  const athlete = useAuthenticatedGet(QUERY_ATHLETE, {
+const getAthlete = (token: any) =>
+  useAuthenticatedGet(QUERY_ATHLETE, {
     headers: {
       Accept: 'application/json',
       Authorization: `Bearer ${token}`,
     },
   })
 
-  return useQuery('athlete', athlete, {
-    staleTime: Infinity,
-    suspense: true,
-  })
-}
-
 type fetchActivitiesType = () => Promise<Activity[]>
-type useGetActivitiesType = {
+type getActivitiesType = {
   data: Activity[]
   isLoading: boolean
 }
-const useGetActivities = () => {
-  const fetchActivities: fetchActivitiesType = useAuthenticatedGet(
-    QUERY_ATHLETE_ACTIVITIES
-  )
+const getActivities = () => useAuthenticatedGet(QUERY_ATHLETE_ACTIVITIES)
 
-  return useQuery('activities', fetchActivities) as useGetActivitiesType
-}
+// const getActivity = (id: any) => {
+//   const { data: activities, isLoading } = getActivities() as fetchActivitiesType
 
-const getActivity = (id: any) => {
-  const { data: activities, isLoading } = useQuery('activities') as any
+//   return {
+//     data: activities?.find((activity: any) => activity.id === id),
+//     isLoading,
+//   }
+// }
 
-  return {
-    data: activities?.find((activity: any) => activity.id === id),
-    isLoading,
-  }
-}
-
-const getActivityStream = (id: any) => {
-  const fetchActivityStream = useAuthenticatedGet(
+const getActivityStream = (id: any) =>
+  useAuthenticatedGet(
     `${QUERY_ACTIVITY}${id}/streams/watts,altitude,heartrate,latlng,cadence,velocity_smooth?resolution=low`
   )
 
-  return useQuery('activityStream', fetchActivityStream, {
-    staleTime: 0,
-    suspense: true,
-  })
-}
-
-export { useGetActivities, getActivity, getActivityStream }
+export { getActivities, getActivityStream }

@@ -14,7 +14,7 @@ export type AuthData = {
   token_type: string
 }
 
-type AuthContextType = {
+export type AuthContextType = {
   auth: AuthData
   isAuthenticated: () => boolean
   setAuthData: (data: AuthData) => void
@@ -32,22 +32,17 @@ const AuthContext = createContext<AuthContextType>({
   setAuthData: (data: AuthData) => {},
 })
 
-type Props = {
-  children: ReactNode
-}
-
 function getInitialState() {
   const auth = localStorage?.getItem('strava-ai')
 
   return auth ? JSON.parse(auth) : {}
 }
 
-export const AuthProvider = ({ children }: Props) => {
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [authData, setAuthData] = useState<AuthData>(getInitialState)
-  const isAuthenticated = useCallback(
-    () => Boolean(authData.access_token),
-    [authData]
-  )
+
+  const isAuthenticated = Boolean(authData.access_token)
+
   const value = { authData, setAuthData, isAuthenticated }
   // @ts-ignore
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
