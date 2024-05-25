@@ -20,7 +20,8 @@
     {
       "files": ["*.ts", "*.tsx"],
       "rules": {
-        "no-unused-vars": "off"
+        "no-unused-vars": "off",
+        "no-loss-of-precision": "off"
       }
     }
   ]

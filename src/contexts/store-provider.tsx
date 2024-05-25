@@ -51,7 +51,7 @@ type Props = {
 export const StoreProvider = ({ children }: Props) => {
   const get = (key: string) => {
     try {
-      return JSON.parse(localStorage.getItem(key) as string)
+      return JSON.parse(localStorage?.getItem(key) as string)
     } catch {
       return null
     }
@@ -65,7 +65,7 @@ export const StoreProvider = ({ children }: Props) => {
       ...value,
     }
 
-    localStorage.setItem(key, JSON.stringify(newValue))
+    localStorage?.setItem(key, JSON.stringify(newValue))
   }
 
   const getActivities = () => {

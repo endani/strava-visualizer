@@ -48,16 +48,16 @@ const useGetActivities = () => {
   return useQuery('activities', fetchActivities) as useGetActivitiesType
 }
 
-const useGetActivity = (id: any) => {
+const getActivity = (id: any) => {
   const { data: activities, isLoading } = useQuery('activities') as any
 
   return {
-    data: activities.find((activity: any) => activity.id === id),
+    data: activities?.find((activity: any) => activity.id === id),
     isLoading,
   }
 }
 
-const useGetActivityStream = (id: any) => {
+const getActivityStream = (id: any) => {
   const fetchActivityStream = useAuthenticatedGet(
     `${QUERY_ACTIVITY}${id}/streams/watts,altitude,heartrate,latlng,cadence,velocity_smooth?resolution=low`
   )
@@ -68,4 +68,4 @@ const useGetActivityStream = (id: any) => {
   })
 }
 
-export { useGetActivities, useGetActivity, useGetActivityStream }
+export { useGetActivities, getActivity, getActivityStream }

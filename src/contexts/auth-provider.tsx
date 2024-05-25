@@ -37,15 +37,17 @@ type Props = {
 }
 
 function getInitialState() {
-  const auth = localStorage.getItem('strava-ai')
+  const auth = localStorage?.getItem('strava-ai')
 
-  console.log('here', auth)
-  // return auth ? JSON.parse(auth) : {}
+  return auth ? JSON.parse(auth) : {}
 }
 
 export const AuthProvider = ({ children }: Props) => {
   const [authData, setAuthData] = useState<AuthData>(getInitialState)
-  const isAuthenticated = useCallback(() => Boolean(authData.token), [authData])
+  const isAuthenticated = useCallback(
+    () => Boolean(authData.access_token),
+    [authData]
+  )
   const value = { authData, setAuthData, isAuthenticated }
   // @ts-ignore
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

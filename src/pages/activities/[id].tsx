@@ -1,20 +1,35 @@
+'use client'
+
 import Head from 'next/head'
 
-import { useGetActivity, useGetActivityStream } from '@/api'
+import { getActivity, getActivityStream } from '@/api'
 import Link from 'next/link'
 import { Button } from '@/components'
 import { RenderLineChart } from '@/components/activity-chart/activity-chart'
 import ActivitySingleCard from '@/components/activity-single-card/activity-single-card'
+import { useEffect, useState } from 'react'
+import { Activity } from '@/types'
 
 export default function SingleActivity(id: string) {
-  const { data: activity, isLoading: isLoadingActivity } = useGetActivity(id)
+  const [activity, setActivity] = useState<Activity | null>(null)
+  const [isLoadingActivity, setIsLoadingActivity] = useState(true)
 
-  const { data: stream, isLoading: isLoadingStream } = useGetActivityStream(id)
+  useEffect(() => {
+    const fetchActivity = async () => {
+      const { data } = await getActivity(id)
+      setActivity(data)
+      setIsLoadingActivity(false)
+    }
+
+    fetchActivity()
+  }, [id])
+
+  const { data: stream, isLoading: isLoadingStream } = getActivityStream(id)
 
   console.log(activity, isLoadingActivity)
   console.log(stream, isLoadingStream)
 
-  if (isLoadingActivity || isLoadingStream) return null
+  if (!activity || isLoadingActivity || isLoadingStream) return null
 
   const activityMovingTime = activity.moving_time
   const activityMovingTimeHours = activityMovingTime.get('hours')

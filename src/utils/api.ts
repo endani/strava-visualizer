@@ -4,7 +4,7 @@ export const API_BASE_URL = 'https://www.strava.com'
 
 const useAuthenticatedGet = (path: string, config: AxiosRequestConfig = {}) => {
   return async () => {
-    const data = JSON.parse(localStorage.getItem('strava-ai') as string) as any
+    const data = JSON.parse(localStorage?.getItem('strava-ai') as string) as any
     const { access_token } = data?.auth || {}
 
     if (!access_token) return []
