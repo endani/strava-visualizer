@@ -1,7 +1,9 @@
-const tailwindcss = require('tailwindcss');
 module.exports = {
-    plugins: [
-        tailwindcss('./tailwind.js'),
-        require('autoprefixer')
-    ],
-};
+  plugins: {
+    tailwindcss: {},
+    'postcss-focus-visible': {
+      replaceWith: '[data-focus-visible-added]',
+    },
+    autoprefixer: {},
+  },
+}

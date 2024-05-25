@@ -1,40 +1,30 @@
-import Moment from 'react-moment'
-import { Link } from 'react-router-dom'
-
+import { Card, Flex, Title, Text, Subtitle } from '@tremor/react'
 import ActivityMap from '../map/map'
+import { Label } from '@primer/react'
+import Link from 'next/link'
 
-const ActivityCard = ({ activity }: { activity: any }) => (
-  <Link to={`/activities/${activity.id}`} key={activity.id}>
-    <div className="flex flex-col rounded-lg shadow-lg bg-white dark:bg-gray-900 overflow-hidden">
-      <dl className="rounded-lg grid grid-cols-2">
-        <div className="flex flex-col">
+import { ActivityCardProps } from './activity-card.types'
+
+const ActivityCard = ({ activity, href }: ActivityCardProps) => (
+  <Link href={href}>
+    <Card className="max-w-md mx-auto">
+      <Flex flexDirection="row" alignItems="start" className="gap-2">
+        {activity.map.summary_polyline && (
           <ActivityMap
             type={activity.start_latlng ? 'map' : 'nomap'}
             polyline={activity.map.summary_polyline}
           />
-        </div>
-        <div className="flex-1 p-6 flex flex-col justify-between">
+        )}
+        <Flex flexDirection="col" justifyContent="around" alignItems="baseline">
           <div className="flex-1">
-            <p className="text-sm font-medium text-indigo-600 dark:text-indigo-200">
-              {activity.type}
-            </p>
-            <p className="text-xl font-semibold text-gray-900 dark:text-gray-200">
-              {activity.name}
-            </p>
+            <Label variant="accent">{activity.type}</Label>
+            <Title>{activity.name}</Title>
+            <Subtitle>{activity.distance}</Subtitle>
           </div>
-          <div className="mt-6 flex items-center">
-            <div className="flex space-x-1 text-sm text-gray-500">
-              <time dateTime="2020-03-16">
-                <Moment
-                  format="ddd, Do MMM YYYY"
-                  date={activity.start_date_local}
-                />
-              </time>
-            </div>
-          </div>
-        </div>
-      </dl>
-    </div>
+          <Text>Tue 24 Aug 2021</Text>
+        </Flex>
+      </Flex>
+    </Card>
   </Link>
 )
 

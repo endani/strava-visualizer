@@ -1,61 +1,15 @@
 // eslint-disable jsx-props-no-spreading
-import {
-  ResponsiveContainer,
-  ComposedChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Area,
-} from 'recharts'
-import { round, map } from 'lodash'
-import useMedia from 'use-media'
+import { Card, Title,  AreaChart } from '@tremor/react'
 
-import { ChartContainer, CustomTooltipStyled } from './styled'
+import { round, map } from 'lodash'
 
 const DISPLAY_ACTIVITY_DISTANCE_UNIT = 'km'
 
-const Tick = ({
-  payload: { value },
-  verticalAnchor,
-  visibleTicksCount,
-  ...rest
-}: {
-  payload: { value?: number }
-  verticalAnchor?: string
-  visibleTicksCount?: number
-}) => (
-  <text style={{ fontSize: '12px' }} {...rest} dy={16}>
-    {value} {DISPLAY_ACTIVITY_DISTANCE_UNIT}
-  </text>
-)
-
-const CustomTooltip = (props: any) => {
-  const { payload, label, active } = props
-  const DISPLAY_ACTIVITY_DISTANCE_UNIT = 'km'
-
-  const items = payload.map((item: any) => (
-    <p style={{ color: item.stroke }} key={item.name}>
-      {item.name}: {item.value} {item.unit}
-    </p>
-  ))
-
-  if (active) {
-    return (
-      <CustomTooltipStyled>
-        <p style={{ opacity: 0.5 }}>
-          distance: {label} {DISPLAY_ACTIVITY_DISTANCE_UNIT}
-        </p>
-        {items}
-      </CustomTooltipStyled>
-    )
-  }
-  return <div />
-}
+const dataFormatter = (number: number) =>
+  `${Intl.NumberFormat('us').format(number).toString()}%`
 
 const RenderLineChart = (props: any) => {
-  const mediaDarkMode = useMedia('(prefers-color-scheme: dark)')
+  const mediaDarkMode = true
   const originalArray = props.data
   const showHeartrate = true
   const displayActivityTotalElevationGainUnit = 'm'
@@ -118,64 +72,78 @@ const RenderLineChart = (props: any) => {
     })
   )
 
-  return (
-    <ChartContainer>
-      <ResponsiveContainer width="99%" height={200}>
-        <ComposedChart data={formattedData}>
-          <Tooltip content={<CustomTooltip />} />
-          <CartesianGrid />
-          <XAxis
-            tick={<Tick payload={{ value: 0 }} />}
-            type="number"
-            domain={[0, 'dataMax']}
-            // interval="Number"
-            allowDecimals
-            dataKey="distance"
-            minTickGap={20}
-          />
-          <YAxis
-            tick={<Tick payload={{ value: 0 }} />}
-            minTickGap={30}
-            type="number"
-            dataKey="altitude"
-            orientation="right"
-            hide
-          />
 
-          <Area
-            type="monotone"
-            dataKey="altitude"
-            stroke={mediaDarkMode ? '#fff' : '#000'}
-            unit={displayActivityTotalElevationGainUnit}
-            strokeWidth={0}
-            dot={false}
-            fill={mediaDarkMode ? '#fff' : '#000'}
-            fillOpacity={0.2}
-          />
-          {showHeartrate ? (
-            <Line
-              type="monotone"
-              dataKey="heartrate"
-              unit="bpm"
-              stroke="#DC524D"
-              strokeWidth={1}
-              dot={false}
-            />
-          ) : null}
-
-          <Line
-            type="monotone"
-            dataKey="speed"
-            unit={displaySpeedUnit}
-            stroke="#0085FF"
-            strokeWidth={1}
-            // yAxisId="left"
-            dot={false}
-          />
-        </ComposedChart>
-      </ResponsiveContainer>
-    </ChartContainer>
+  return(
+    <Card>
+    <Title>Export/Import Growth Rates (1970 to 2021)</Title>
+    <AreaChart
+      className="mt-6"
+      data={formattedData}
+      index="distance"
+      categories={['altitude', 'heartrate', 'speed']}
+      valueFormatter={dataFormatter}
+      yAxisWidth={40}
+    />
+  </Card>
   )
+  // return (
+  //   <ChartContainer>
+  //     <ResponsiveContainer width="99%" height={200}>
+  //       <ComposedChart data={formattedData}>
+  //         <Tooltip content={<CustomTooltip />} />
+  //         <CartesianGrid />
+  //         <XAxis
+  //           tick={<Tick payload={{ value: 0 }} />}
+  //           type="number"
+  //           domain={[0, 'dataMax']}
+  //           // interval="Number"
+  //           allowDecimals
+  //           dataKey="distance"
+  //           minTickGap={20}
+  //         />
+  //         <YAxis
+  //           tick={<Tick payload={{ value: 0 }} />}
+  //           minTickGap={30}
+  //           type="number"
+  //           dataKey="altitude"
+  //           orientation="right"
+  //           hide
+  //         />
+
+  //         <Area
+  //           type="monotone"
+  //           dataKey="altitude"
+  //           stroke={mediaDarkMode ? '#fff' : '#000'}
+  //           unit={displayActivityTotalElevationGainUnit}
+  //           strokeWidth={0}
+  //           dot={false}
+  //           fill={mediaDarkMode ? '#fff' : '#000'}
+  //           fillOpacity={0.2}
+  //         />
+  //         {showHeartrate ? (
+  //           <Line
+  //             type="monotone"
+  //             dataKey="heartrate"
+  //             unit="bpm"
+  //             stroke="#DC524D"
+  //             strokeWidth={1}
+  //             dot={false}
+  //           />
+  //         ) : null}
+
+  //         <Line
+  //           type="monotone"
+  //           dataKey="speed"
+  //           unit={displaySpeedUnit}
+  //           stroke="#0085FF"
+  //           strokeWidth={1}
+  //           // yAxisId="left"
+  //           dot={false}
+  //         />
+  //       </ComposedChart>
+  //     </ResponsiveContainer>
+  //   </ChartContainer>
+  // )
 }
 
 export { RenderLineChart }
