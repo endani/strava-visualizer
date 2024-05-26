@@ -1,15 +1,11 @@
-import { useEffect, useState } from "react"
-import Head from "next/head"
+import Head from 'next/head'
 
-import { getActivities } from "@/api"
-import { ActivityCard, ActivityFilters } from "@/components"
-import { Activity } from "@/types"
-import { isEmpty } from "lodash"
+import { Activity } from '@/types'
 
 const filterActivities = (activities: Activity[]) =>
   activities.filter(
     (activity: Activity) =>
-      activity.distance && ["Run", "Ride", "Workout"].includes(activity.type)
+      activity.distance && ['Run', 'Ride', 'Workout'].includes(activity.type),
   )
 
 const Activities = () => {
@@ -49,8 +45,8 @@ const Activities = () => {
       <Head>
         <title>Activities</title>
         <meta
-          name="description"
           content="Get the most out of your Strava data with Strava Visualizer."
+          name="description"
         />
       </Head>
       <main>

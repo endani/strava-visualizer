@@ -3,12 +3,11 @@ import {
   Navbar as NextUINavbar,
   NavbarContent,
   NavbarItem,
-} from "@nextui-org/react"
+} from '@nextui-org/react'
 
-import { siteConfig } from "@/config/site"
-import { ThemeSwitch } from "@/components/theme-switch"
-import { GithubIcon, SearchIcon } from "@/components/icons"
-import { Logo } from "@/components/icons"
+import { siteConfig } from '@/config/site'
+import { ThemeSwitch } from '@/components/theme-switch'
+import { GithubIcon } from '@/components/icons'
 
 export const Navbar = () => {
   return (

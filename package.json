@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint . --ext .ts,.tsx -c .eslintrc.json --fix"
+    "lint": "next lint"
   },
   "dependencies": {
     "@nextui-org/react": "^2.3.6",
@@ -19,7 +19,7 @@
     "@typescript-eslint/parser": "^7.10.0",
     "autoprefixer": "10.4.19",
     "clsx": "^2.1.1",
-    "eslint": "^9.3.0",
+    "eslint": "^8.41.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-jsx-a11y": "^6.8.0",
@@ -33,6 +33,7 @@
     "next": "14.2.3",
     "next-themes": "^0.3.0",
     "postcss": "8.4.38",
+    "prettier": "^3.2.5",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "tailwind-variants": "^0.2.1",

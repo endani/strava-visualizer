@@ -1,20 +1,21 @@
-import { Card, Flex, Title, Text, Subtitle } from "@tremor/react"
-import ActivityMap from "../map/map"
-import Link from "next/link"
+import { Card, Flex, Title, Text, Subtitle } from '@tremor/react'
+import Link from 'next/link'
 
-import { ActivityCardProps } from "./activity-card.types"
+import ActivityMap from '../map/map'
+
+import { ActivityCardProps } from './activity-card.types'
 
 const ActivityCard = ({ activity, href }: ActivityCardProps) => (
   <Link href={href}>
     <Card className="max-w-md mx-auto">
-      <Flex flexDirection="row" alignItems="start" className="gap-2">
+      <Flex alignItems="start" className="gap-2" flexDirection="row">
         {activity.map.summary_polyline && (
           <ActivityMap
-            type={activity.start_latlng ? "map" : "nomap"}
             polyline={activity.map.summary_polyline}
+            type={activity.start_latlng ? 'map' : 'nomap'}
           />
         )}
-        <Flex flexDirection="col" justifyContent="around" alignItems="baseline">
+        <Flex alignItems="baseline" flexDirection="col" justifyContent="around">
           <div className="flex-1">
             <div>{activity.type}</div>
             <Title>{activity.name}</Title>

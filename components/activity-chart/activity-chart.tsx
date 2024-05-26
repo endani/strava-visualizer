@@ -1,24 +1,23 @@
 // eslint-disable jsx-props-no-spreading
-import { Card, Title, AreaChart } from "@tremor/react"
+import { Card, Title, AreaChart } from '@tremor/react'
+import { round, map } from 'lodash'
 
-import { round, map } from "lodash"
-
-const DISPLAY_ACTIVITY_DISTANCE_UNIT = "km"
+const DISPLAY_ACTIVITY_DISTANCE_UNIT = 'km'
 
 const dataFormatter = (number: number) =>
-  `${Intl.NumberFormat("us").format(number).toString()}%`
+  `${Intl.NumberFormat('us').format(number).toString()}%`
 
 const RenderLineChart = (props: any) => {
   const mediaDarkMode = true
   const originalArray = props.data
   const showHeartrate = true
-  const displayActivityTotalElevationGainUnit = "m"
-  const displaySpeedUnit = "kph"
+  const displayActivityTotalElevationGainUnit = 'm'
+  const displaySpeedUnit = 'kph'
 
   // distance
 
   const distance = originalArray.filter((item: any) =>
-    item.type.includes("distance")
+    item.type.includes('distance'),
   )
   const distanceStream = distance[0].data
   const distanceInKm = distanceStream.map((item: any) => round(item / 1000, 2))
@@ -28,8 +27,9 @@ const RenderLineChart = (props: any) => {
   // Altitude
   let altitudeStream: any = []
   const altitude = originalArray.filter((item: any) =>
-    item.type.includes("altitude")
+    item.type.includes('altitude'),
   )
+
   if (altitude.length > 0) {
     altitudeStream = altitude[0].data
   }
@@ -37,8 +37,9 @@ const RenderLineChart = (props: any) => {
   // heartrate
   let heartrateStream: any = []
   const heartrate = originalArray.filter((item: any) =>
-    item.type.includes("heartrate")
+    item.type.includes('heartrate'),
   )
+
   if (heartrate.length > 0) {
     heartrateStream = heartrate[0].data
   }
@@ -46,7 +47,7 @@ const RenderLineChart = (props: any) => {
   // speed
   let speedStream = []
   const speed = originalArray.filter((item: any) =>
-    item.type.includes("velocity_smooth")
+    item.type.includes('velocity_smooth'),
   )
 
   if (speed.length > 0) {
@@ -69,17 +70,17 @@ const RenderLineChart = (props: any) => {
       altitude: altitudeStream[index],
       heartrate: heartrateStream[index],
       speed: displaySpeed[index],
-    })
+    }),
   )
 
   return (
     <Card>
       <Title>Export/Import Growth Rates (1970 to 2021)</Title>
       <AreaChart
+        categories={['altitude', 'heartrate', 'speed']}
         className="mt-6"
         data={formattedData}
         index="distance"
-        categories={["altitude", "heartrate", "speed"]}
         valueFormatter={dataFormatter}
         yAxisWidth={40}
       />
