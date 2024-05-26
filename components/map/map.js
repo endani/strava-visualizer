@@ -1,6 +1,6 @@
 import { MapImageLarge, MapImageSmall } from './styled'
 
-const googleApiKey = 'AIzaSyAsyxYCjxLqi49yGUuqUJRa4cYN8V4VyLE'
+const googleApiKey = process.env.googleAPIKEY
 
 const ActivityMap = (props) => {
   const { mediaDarkMode, polyline, type } = props
