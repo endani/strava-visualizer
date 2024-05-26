@@ -1,14 +1,9 @@
-"use client"
+'use client'
 
-import Head from "next/head"
+import Head from 'next/head'
+import { useState } from 'react'
 
-import { getActivity, getActivityStream } from "@/api"
-import Link from "next/link"
-import { RenderLineChart } from "@/components/activity-chart/activity-chart"
-import ActivitySingleCard from "@/components/activity-single-card/activity-single-card"
-import { useEffect, useState } from "react"
-import { Activity } from "@/types"
-import { Button } from "@nextui-org/react"
+import { Activity } from '@/types'
 
 export default function SingleActivity(id: string) {
   const [activity, setActivity] = useState<Activity | null>(null)
@@ -41,8 +36,8 @@ export default function SingleActivity(id: string) {
       <Head>
         <title>Activity</title>
         <meta
-          name="description"
           content="Get the most out of your Strava data with Strava Visualizer."
+          name="description"
         />
       </Head>
       <main>

@@ -18,7 +18,7 @@ const ActivitySingleCard = (props) => {
   const [, setMap] = React.useState(null)
 
   const decodedPolyline = polyline.toGeoJSON(
-    props.activitySummary.map.summary_polyline
+    props.activitySummary.map.summary_polyline,
   )
   const decodedPolylineCoordinates = decodedPolyline.coordinates
 
@@ -128,9 +128,12 @@ const ActivitySingleCard = (props) => {
         // to the bounds of multiple Points or Polygon geomteries - it just
         // requires wrapping all the coordinates with the extend method.
 
-        const bounds = coordinates.reduce(function (bounds, coord) {
-          return bounds.extend(coord)
-        }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]))
+        const bounds = coordinates.reduce(
+          function (bounds, coord) {
+            return bounds.extend(coord)
+          },
+          new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]),
+        )
 
         map.fitBounds(bounds, { padding: 80 })
       })
@@ -139,7 +142,7 @@ const ActivitySingleCard = (props) => {
     if (!map) initializeMap({ setMap, mapContainer })
   }, [decodedPolylineCoordinates, props])
 
-  return <div style={style} ref={(el) => (mapContainer.current = el)} />
+  return <div ref={(el) => (mapContainer.current = el)} style={style} />
 }
 
 ActivitySingleCard.propTypes = {

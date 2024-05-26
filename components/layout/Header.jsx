@@ -10,7 +10,7 @@ import { NavLink } from '@/components/NavLink'
 
 function MobileNavLink({ href, children }) {
   return (
-    <Popover.Button as={Link} href={href} className="block w-full p-2">
+    <Popover.Button as={Link} className="block w-full p-2" href={href}>
       {children}
     </Popover.Button>
   )
@@ -22,22 +22,22 @@ function MobileNavIcon({ open }) {
       aria-hidden="true"
       className="h-3.5 w-3.5 overflow-visible stroke-slate-700"
       fill="none"
-      strokeWidth={2}
       strokeLinecap="round"
+      strokeWidth={2}
     >
       <path
-        d="M0 1H14M0 7H14M0 13H14"
         className={clsx(
           'origin-center transition',
-          open && 'scale-90 opacity-0'
+          open && 'scale-90 opacity-0',
         )}
+        d="M0 1H14M0 7H14M0 13H14"
       />
       <path
-        d="M2 2L12 12M12 2L2 12"
         className={clsx(
           'origin-center transition',
-          !open && 'scale-90 opacity-0'
+          !open && 'scale-90 opacity-0',
         )}
+        d="M2 2L12 12M12 2L2 12"
       />
     </svg>
   )
@@ -47,8 +47,8 @@ function MobileNavigation() {
   return (
     <Popover>
       <Popover.Button
-        className="relative z-10 flex h-8 w-8 items-center justify-center [&:not(:focus-visible)]:focus:outline-none"
         aria-label="Toggle Navigation"
+        className="relative z-10 flex h-8 w-8 items-center justify-center [&:not(:focus-visible)]:focus:outline-none"
       >
         {({ open }) => <MobileNavIcon open={open} />}
       </Popover.Button>
@@ -95,7 +95,7 @@ export function Header() {
       <Container>
         <nav className="relative z-50 flex justify-between">
           <div className="flex items-center md:gap-x-12">
-            <Link href="#" aria-label="Home">
+            <Link aria-label="Home" href="#">
               <Logo className="h-10 w-auto" />
             </Link>
             <div className="hidden md:flex md:gap-x-6">
@@ -108,7 +108,7 @@ export function Header() {
             <div className="hidden md:block">
               <NavLink href="/login">Sign in</NavLink>
             </div>
-            <Button href="/register" color="blue">
+            <Button color="blue" href="/register">
               <span>
                 Get started <span className="hidden lg:inline">today</span>
               </span>

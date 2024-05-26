@@ -1,7 +1,6 @@
-
 import { MapImageLarge, MapImageSmall } from './styled'
 
-const googleApiKey = 'AIzaSyAsyxYCjxLqi49yGUuqUJRa4cYN8V4VyLE'
+const googleApiKey = process.env.googleAPIKEY
 
 const ActivityMap = (props) => {
   const { mediaDarkMode, polyline, type } = props
@@ -29,31 +28,32 @@ const ActivityMap = (props) => {
       <>
         <MapImageLarge>
           <img
+            alt=""
             src={imageUrlLarge}
             style={{
               width: '100%',
             }}
-            alt=""
           />
         </MapImageLarge>
         <MapImageSmall>
-          <img src={imageUrlSmall} style={{ width: '100%' }} alt="" />
+          <img alt="" src={imageUrlSmall} style={{ width: '100%' }} />
         </MapImageSmall>
       </>
     )
   }
+
   return (
     <>
       <MapImageLarge>
         <div
+          alt=""
           style={{
             width: '100%',
           }}
-          alt=""
         />
       </MapImageLarge>
       <MapImageSmall>
-        <div style={{ width: '100%' }} alt="" />
+        <div alt="" style={{ width: '100%' }} />
       </MapImageSmall>
     </>
   )

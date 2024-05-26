@@ -1,5 +1,5 @@
 export interface ActivityFiltersProps {
   onFilterChange: (
-    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => void
 }

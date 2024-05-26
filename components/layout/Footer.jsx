@@ -1,8 +1,6 @@
 import Link from 'next/link'
 
 import { Container } from '@/components/container/container'
-import { Logo } from '@/components/atoms/Logo'
-import { NavLink } from '@/components/atoms/NavLink'
 
 export function Footer() {
   return (
@@ -11,9 +9,9 @@ export function Footer() {
         <div className="flex flex-col items-center border-t border-slate-400/10 py-10 sm:flex-row-reverse sm:justify-between">
           <div className="flex gap-x-6">
             <Link
-              href="https://twitter.com"
-              className="group"
               aria-label="TaxPal on Twitter"
+              className="group"
+              href="https://twitter.com"
             >
               <svg
                 aria-hidden="true"
@@ -23,9 +21,9 @@ export function Footer() {
               </svg>
             </Link>
             <Link
-              href="https://github.com"
-              className="group"
               aria-label="TaxPal on GitHub"
+              className="group"
+              href="https://github.com"
             >
               <svg
                 aria-hidden="true"
