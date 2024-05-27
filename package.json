@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@nextui-org/react": "^2.3.6",
+    "@nextui-org/react": "^2.4.0",
     "@react-aria/visually-hidden": "^3.8.12",
     "@tremor/react": "^3.17.2",
     "@types/node": "20.12.12",
