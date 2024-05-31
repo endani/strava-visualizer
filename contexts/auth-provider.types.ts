@@ -9,5 +9,4 @@ export type AuthData = {
 export type AuthContextType = {
   auth: AuthData
   isAuthenticated: () => boolean
-  setAuthData: (data: AuthData) => void
 }

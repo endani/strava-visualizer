@@ -1,24 +1,14 @@
 import {
   ReactNode,
-  useCallback,
   createContext,
   useContext,
+  useEffect,
   useState,
 } from 'react'
 
-export type AuthData = {
-  access_token: string
-  expires_at: number
-  expires_in: number
-  refresh_token: string
-  token_type: string
-}
-
-export type AuthContextType = {
-  auth: AuthData
-  isAuthenticated: () => boolean
-  setAuthData: (data: AuthData) => void
-}
+import { AuthData, AuthContextType } from './auth-provider.types'
+import { refreshStravaToken } from '@/api'
+import { setToLocalStorage } from '@/utils'
 
 const AuthContext = createContext<AuthContextType>({
   auth: {
@@ -29,29 +19,59 @@ const AuthContext = createContext<AuthContextType>({
     token_type: '',
   },
   isAuthenticated: () => false,
-  setAuthData: (data: AuthData) => {},
 })
 
-function getInitialState() {
-  const auth = localStorage?.getItem('strava-ai')
+const getInitialState = (): AuthData => {
+  const localStorageAuth = localStorage.getItem('strava-ai')
 
-  return auth ? JSON.parse(auth) : {}
+  const parsedAuth = localStorageAuth
+    ? JSON.parse(localStorageAuth)?.auth
+    : { auth: {} }
+
+  return parsedAuth
 }
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [authData, setAuthData] = useState<AuthData>(getInitialState)
+  const [authData, setAuthData] = useState<AuthData | null>()
 
-  const isAuthenticated = Boolean(authData.access_token)
+  const checkAuthDataState = (authData: AuthData) => {
+    const now = Number((new Date().getTime() / 1000).toFixed(0))
 
-  const value = { authData, setAuthData, isAuthenticated }
+    if (now >= authData.expires_at) {
+      console.info('Refreshing token 🚀')
+      refreshStravaToken(authData.refresh_token).then((data) => {
+        setAuthData(data)
+        setToLocalStorage('strava-ai', { auth: data })
+      })
+    }
+
+    return true
+  }
+
+  useEffect(() => {
+    const data = getInitialState()
+
+    checkAuthDataState(data)
+
+    if (data) {
+      setAuthData(data)
+    }
+  }, [])
+
+  const isAuthenticated = Boolean(authData?.access_token)
+
+  const value = { authData, isAuthenticated }
+
   // @ts-ignore
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
 export const useAuth = () => {
   const context = useContext(AuthContext)
+
   if (context === undefined) {
     throw new Error('useAuth must be used within a AuthProvider')
   }
+
   return context
 }

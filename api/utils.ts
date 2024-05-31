@@ -23,11 +23,12 @@ const useAuthenticatedGet = (path: string, config: AxiosRequestConfig = {}) => {
 
 const usingAuthenticatedPost = async (
   path: string,
-  config: AxiosRequestConfig = {}
+  config: AxiosRequestConfig = {},
 ) => {
   const result = await axios.post(API_BASE_URL + path, {
     ...config,
   })
+
   return result.data
 }
 

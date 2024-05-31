@@ -1,16 +1,18 @@
-import { useAuthenticatedGet, usingAuthenticatedPost } from "@/utils/api"
-import { Activity } from "@/types"
+import { useAuthenticatedGet, usingAuthenticatedPost } from './utils'
+
+import { Activity } from '@/types'
+
 const API_CLIENT = process.env.stravaClient
 const API_SECRET = process.env.stravaSecret
 
-const QUERY_TOKEN = "/oauth/token"
-const QUERY_ATHLETE = "/api/v3/athlete"
-const QUERY_ATHLETE_ACTIVITIES = "/api/v3/athlete/activities"
-const QUERY_ACTIVITY = "/api/v3/activities/"
+const QUERY_TOKEN = '/oauth/token'
+const QUERY_ATHLETE = '/api/v3/athlete'
+const QUERY_ATHLETE_ACTIVITIES = '/api/v3/athlete/activities'
+const QUERY_ACTIVITY = '/api/v3/activities/'
 
 export const getStravaToken = async (code: string) => {
   const tokenData = await usingAuthenticatedPost(QUERY_TOKEN, {
-    grant_type: "authorization_code",
+    grant_type: 'authorization_code',
     client_id: API_CLIENT,
     client_secret: API_SECRET,
     code,
@@ -19,10 +21,21 @@ export const getStravaToken = async (code: string) => {
   return tokenData
 }
 
+export const refreshStravaToken = async (refreshToken: string) => {
+  const tokenData = await usingAuthenticatedPost(QUERY_TOKEN, {
+    grant_type: 'refresh_token',
+    client_id: API_CLIENT,
+    client_secret: API_SECRET,
+    refresh_token: refreshToken,
+  } as any)
+
+  return tokenData
+}
+
 const getAthlete = (token: any) =>
   useAuthenticatedGet(QUERY_ATHLETE, {
     headers: {
-      Accept: "application/json",
+      Accept: 'application/json',
       Authorization: `Bearer ${token}`,
     },
   })
@@ -44,7 +57,7 @@ const getActivity = async (id: any) => {
 
 const getActivityStream = (id: any) =>
   useAuthenticatedGet(
-    `${QUERY_ACTIVITY}${id}/streams/watts,altitude,heartrate,latlng,cadence,velocity_smooth?resolution=low`
+    `${QUERY_ACTIVITY}${id}/streams/watts,altitude,heartrate,latlng,cadence,velocity_smooth?resolution=low`,
   )
 
 export { getActivities, getActivityStream, getActivity }
