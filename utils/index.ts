@@ -30,4 +30,12 @@ const meterstoUnits = (unit: 'miles' | 'kilometers', meters: number) => {
   return `${distance} ${unitToPrefixMap[unit]}`
 }
 
-export { getFromLocalStorage, setToLocalStorage, meterstoUnits }
+const secondsToTime = (seconds: number) => {
+  const hours = Math.floor(seconds / 3600)
+  const minutes = Math.floor((seconds % 3600) / 60)
+  const remainingSeconds = seconds % 60
+
+  return `${hours}:${minutes}:${remainingSeconds}`
+}
+
+export { getFromLocalStorage, setToLocalStorage, meterstoUnits, secondsToTime }

@@ -1,4 +1,5 @@
 export { ActivityCard } from './activities/activity-card/activity-card'
-export { ActivityFilters } from './activities/activity-filters/activity-filters'
+export { ActivitySingleCard } from './activities/activity-single-card/activity-single-card'
+export { ActivityChart } from './activities/activity-chart/activity-chart'
 export { Activities } from './activities/activities'
 export { ActivityMap } from './activities/activity-map/activity-map'

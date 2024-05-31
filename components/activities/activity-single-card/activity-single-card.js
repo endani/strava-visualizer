@@ -1,7 +1,7 @@
 import polyline from '@mapbox/polyline'
 import mapboxgl from 'mapbox-gl'
 import PropTypes from 'prop-types'
-import React from 'react'
+import React, { useEffect } from 'react'
 
 const latLngCircleSize = 10
 const latLngCircleOpacity = 1
@@ -22,9 +22,9 @@ const ActivitySingleCard = (props) => {
   )
   const decodedPolylineCoordinates = decodedPolyline.coordinates
 
-  mapboxgl.accessToken = process.env.REACT_APP_MAPBOX
+  mapboxgl.accessToken = process.env.mapboxKey
 
-  React.useEffect(() => {
+  useEffect(() => {
     const { mediaDarkMode } = props
     let mapTheme
 
@@ -41,8 +41,8 @@ const ActivitySingleCard = (props) => {
         container: mapContainer.current,
         style: mapTheme,
         center: [
-          props.activitySummary.start_latlng[1],
-          props.activitySummary.start_latlng[0],
+          props.activitySummary?.start_latlng[1],
+          props.activitySummary?.start_latlng[0],
         ],
         zoom: 10,
       })
@@ -150,4 +150,4 @@ ActivitySingleCard.propTypes = {
   mediaDarkMode: PropTypes.bool,
 }
 
-export default ActivitySingleCard
+export { ActivitySingleCard }

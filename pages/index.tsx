@@ -1,10 +1,4 @@
-import {
-  Link,
-  Snippet,
-  Code,
-  button as buttonStyles,
-  Button,
-} from '@nextui-org/react'
+import { Link, button as buttonStyles } from '@nextui-org/react'
 
 import { Activities } from '@/components'
 import DefaultLayout from '@/layouts/default'

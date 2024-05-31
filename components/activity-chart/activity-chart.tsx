@@ -7,7 +7,7 @@ const DISPLAY_ACTIVITY_DISTANCE_UNIT = 'km'
 const dataFormatter = (number: number) =>
   `${Intl.NumberFormat('us').format(number).toString()}%`
 
-const RenderLineChart = (props: any) => {
+const ActivityChart = (props: any) => {
   const mediaDarkMode = true
   const originalArray = props.data
   const showHeartrate = true
@@ -146,4 +146,4 @@ const RenderLineChart = (props: any) => {
   // )
 }
 
-export { RenderLineChart }
+export { ActivityChart }

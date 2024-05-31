@@ -2,16 +2,10 @@ import { useEffect, useState } from 'react'
 import Head from 'next/head'
 import { Spinner } from '@nextui-org/spinner'
 
-import { ActivityCard, ActivityFilters } from '@/components'
+import { ActivityCard } from '@/components'
 import { Activity } from '@/types'
 import { getActivities } from '@/api'
 import { subtitle, title } from '@/config/primitives'
-
-const filterActivities = (activities: Activity[]) =>
-  activities.filter(
-    (activity: Activity) =>
-      activity.distance && ['Run', 'Ride', 'Workout'].includes(activity.type),
-  )
 
 const Activities = () => {
   const [activities, setActivities] = useState<Activity[]>([])
