@@ -9,11 +9,13 @@ import {
   Spinner,
   button as buttonStyles,
 } from '@nextui-org/react'
+import NextLink from 'next/link'
 
 import { Activity } from '@/types'
 import { getActivity, getActivityStream } from '@/api'
 import { ActivityChart, ActivitySingleCard } from '@/components'
 import { secondsToTime } from '@/utils'
+import clsx from 'clsx'
 
 export default function SingleActivity() {
   const params = useParams<{ id: string }>()
@@ -59,14 +61,17 @@ export default function SingleActivity() {
             <main className="flex-1 overflow-y-auto focus:outline-none">
               <div className="relative px-4 pb-20 pt-8 sm:px-6 lg:px-8 lg:pb-8 lg:pt-8">
                 <div className="relative mx-auto max-w-7xl">
-                  <Button
-                    className={buttonStyles({
-                      color: 'primary',
-                    })}
-                    onClick={() => window.history.back()}
+                  <NextLink
+                    className={clsx(
+                      buttonStyles({
+                        color: 'primary',
+                      }),
+                      'mb-4',
+                    )}
+                    href="/"
                   >
                     ← Back
-                  </Button>
+                  </NextLink>
 
                   <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-gray-200 sm:text-4xl">
                     {activity?.name}
