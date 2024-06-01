@@ -1,8 +1,6 @@
-import { Link } from "@nextui-org/react"
+import { Head } from './head'
 
-import { Head } from "./head"
-
-import { Navbar } from "@/components/navbar"
+import { Navbar } from '@/components/navbar'
 
 export default function DefaultLayout({
   children,

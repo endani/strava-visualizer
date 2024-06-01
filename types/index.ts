@@ -1,10 +1,11 @@
-import { SVGProps } from "react"
+import { SVGProps } from 'react'
 
 export type IconSvgProps = SVGProps<SVGSVGElement> & {
   size?: number
 }
 
 export interface Activity {
+  calories: number
   resource_state: number
   athlete: Athlete
   name: string

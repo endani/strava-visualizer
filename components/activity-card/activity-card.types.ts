@@ -1,6 +1,4 @@
-import { Activity } from '@/types'
-
 export interface ActivityCardProps {
-  activity: Activity
+  activity: any
   href: string
 }

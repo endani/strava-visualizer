@@ -6,21 +6,20 @@ import { useRouter } from 'next/router'
 
 import { fontSans, fontMono } from '../config/fonts'
 
-import { StoreProvider } from '@/contexts/store-provider'
-
 import '@/styles/globals.css'
+import { AuthProvider } from '@/contexts/auth-provider'
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter()
 
   return (
-    <StoreProvider>
-      <NextUIProvider navigate={router.push}>
-        <NextThemesProvider>
+    <NextUIProvider navigate={router.push}>
+      <NextThemesProvider>
+        <AuthProvider>
           <Component {...pageProps} />
-        </NextThemesProvider>
-      </NextUIProvider>
-    </StoreProvider>
+        </AuthProvider>
+      </NextThemesProvider>
+    </NextUIProvider>
   )
 }
 

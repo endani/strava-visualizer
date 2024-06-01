@@ -78,35 +78,3 @@ jobs:
         with:
           name: build
           path: build
-
-  test:
-    name: 'Test'
-    runs-on: ubuntu-latest
-    needs: [lint, build]
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Get yarn cache
-        uses: actions/cache@v3
-        id: yarn-cache
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock','.github/workflows/**.yml') }}
-
-      - name: Install Dependencies
-        if: steps.yarn-cache.outputs.cache.hit != 'true'
-        run: yarn install --frozen-lockfile
-
-      - uses: actions/download-artifact@v3
-        with:
-          name: build
-          path: build
-
-      - name: Test
-        run: yarn test

@@ -8,11 +8,11 @@ const dataFormatter = (number: number) =>
   `${Intl.NumberFormat('us').format(number).toString()}%`
 
 const ActivityChart = (props: any) => {
-  const mediaDarkMode = true
   const originalArray = props.data
-  const showHeartrate = true
-  const displayActivityTotalElevationGainUnit = 'm'
-  const displaySpeedUnit = 'kph'
+  // const mediaDarkMode = true
+  // const showHeartrate = true
+  // const displayActivityTotalElevationGainUnit = 'm'
+  // const displaySpeedUnit = 'kph'
 
   // distance
 
