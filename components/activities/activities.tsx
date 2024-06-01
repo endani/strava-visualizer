@@ -3,16 +3,18 @@ import Head from 'next/head'
 import { Spinner } from '@nextui-org/spinner'
 
 import { ActivityCard } from '@/components'
-import { Activity } from '@/types'
-import { getActivities } from '@/api'
+import { useGetActivities } from '@/api'
 import { subtitle, title } from '@/config/primitives'
 
 const Activities = () => {
-  const [activities, setActivities] = useState<Activity[]>([])
+  const { data: activities, isLoading } = useGetActivities()
 
-  useEffect(() => {
-    getActivities().then((data) => setActivities(data))
-  }, [])
+  if (isLoading)
+    return (
+      <div className="mx-auto text-center mt-16">
+        <Spinner color="default" size="sm" />
+      </div>
+    )
 
   return (
     <>
@@ -37,28 +39,14 @@ const Activities = () => {
               </p>
             </div>
 
-            {!activities.length && (
-              <div className="mx-auto text-center mt-16">
-                <Spinner color="default" size="sm" />
-              </div>
-            )}
-
-            {!activities && (
-              <div className="mx-auto text-center mt-16">
-                <p className="mt-2 text-lg leading-8 text-gray-600">
-                  We have not found any results.
-                </p>
-              </div>
-            )}
             <div className="mx-auto text-center mt-16 grid max-w-2xl auto-rows-fr grid-cols-1 gap-8 sm:mt-20 lg:mx-0 lg:max-w-none lg:grid-cols-3">
-              {activities &&
-                activities.map((activity: any) => (
-                  <ActivityCard
-                    key={activity.id}
-                    activity={activity}
-                    href={`/activities/${activity.id}`}
-                  />
-                ))}
+              {activities.map((activity: any) => (
+                <ActivityCard
+                  key={activity.id}
+                  activity={activity}
+                  href={`/activities/${activity.id}`}
+                />
+              ))}
             </div>
           </div>
         </div>

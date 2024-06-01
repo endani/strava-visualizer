@@ -1,45 +1,25 @@
 'use client'
 
 import Head from 'next/head'
-import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
-import {
-  Button,
-  Link,
-  Spinner,
-  button as buttonStyles,
-} from '@nextui-org/react'
+import { Spinner, button as buttonStyles } from '@nextui-org/react'
 import NextLink from 'next/link'
+import clsx from 'clsx'
 
-import { Activity } from '@/types'
-import { getActivity, getActivityStream } from '@/api'
 import { ActivityChart, ActivitySingleCard } from '@/components'
 import { secondsToTime } from '@/utils'
-import clsx from 'clsx'
+import { useGetActivity, useGetActivityStream } from '@/api'
 
 export default function SingleActivity() {
   const params = useParams<{ id: string }>()
+  const { id } = params
 
-  const [activity, setActivity] = useState<Activity | null>(null)
-  const [activityStream, setActivityStream] = useState<any | null>(null)
+  const { data: activity, isLoading: isActivityLoading } = useGetActivity(id)
 
-  const [isLoadingActivity, setIsLoadingActivity] = useState(true)
+  const { data: activityStream, isLoading: isActivityStreamLoading } =
+    useGetActivityStream(id)
 
-  useEffect(() => {
-    if (params) {
-      const { id } = params
-
-      Promise.all([getActivity(id), getActivityStream(id)]).then(
-        ([activity, activityStream]) => {
-          setActivity(activity)
-          setActivityStream(activityStream)
-          setIsLoadingActivity(false)
-        },
-      )
-    }
-  }, [params])
-
-  if (!activity || isLoadingActivity)
+  if (isActivityLoading || isActivityStreamLoading)
     return (
       <div className="mx-auto text-center mt-16">
         <Spinner color="default" size="sm" />
