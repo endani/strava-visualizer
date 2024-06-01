@@ -7,7 +7,8 @@ import {
 } from 'react'
 
 import { AuthData, AuthContextType } from './auth-provider.types'
-import { refreshStravaToken } from '@/api'
+
+import { getStravaToken, refreshStravaToken } from '@/api'
 import { setToLocalStorage } from '@/utils'
 
 const AuthContext = createContext<AuthContextType>({
@@ -19,6 +20,8 @@ const AuthContext = createContext<AuthContextType>({
     token_type: '',
   },
   isAuthenticated: () => false,
+  authenticate: () => null,
+  logout: () => null,
 })
 
 const getInitialState = (): AuthData => {
@@ -58,9 +61,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [])
 
+  const authenticate = (code: string) => {
+    getStravaToken(code).then((data) => {
+      setAuthData(data)
+      setToLocalStorage('strava-ai', { auth: data })
+    })
+  }
+
+  const logout = () => {
+    setAuthData(null)
+    localStorage.removeItem('strava-ai')
+  }
+
   const isAuthenticated = Boolean(authData?.access_token)
 
-  const value = { authData, isAuthenticated }
+  const value = { authData, isAuthenticated, authenticate, logout }
 
   // @ts-ignore
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

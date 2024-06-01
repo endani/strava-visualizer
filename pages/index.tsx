@@ -1,9 +1,13 @@
+import { useEffect } from 'react'
 import { Link, button as buttonStyles } from '@nextui-org/react'
+import { useSearchParams } from 'next/navigation'
 
 import { Activities } from '@/components'
 import DefaultLayout from '@/layouts/default'
 import { useAuth } from '@/contexts/auth-provider'
 import { subtitle, title } from '@/config/primitives'
+
+const CURRENT_HOST = process.env.NEXT_PUBLIC_HOST || 'http://localhost:3000'
 
 const NonLoggedContent = () => (
   <section className="flex flex-col items-center justify-center gap-6 py-8 md:py-10">
@@ -23,7 +27,7 @@ const NonLoggedContent = () => (
         className={buttonStyles({
           color: 'primary',
         })}
-        href={`https://www.strava.com/oauth/authorize?client_id=${process.env.stravaClient}&response_type=code&redirect_uri=http://localhost:3000&approval_prompt=force&scope=activity:read_all,read_all,activity:read,profile:read_all`}
+        href={`https://www.strava.com/oauth/authorize?client_id=${process.env.stravaClient}&response_type=code&redirect_uri=${CURRENT_HOST}&approval_prompt=force&scope=activity:read_all,read_all,activity:read,profile:read_all`}
       >
         Login with Strava
       </Link>
@@ -32,7 +36,22 @@ const NonLoggedContent = () => (
 )
 
 export default function IndexPage() {
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, authenticate } = useAuth()
+
+  const params = useSearchParams()
+  const code = params.get('code')
+
+  useEffect(() => {
+    if (code) {
+      if (isAuthenticated) {
+        window.history.replaceState({}, document.title, '/')
+
+        return
+      }
+
+      authenticate(code)
+    }
+  }, [code, isAuthenticated])
 
   return (
     <DefaultLayout>
