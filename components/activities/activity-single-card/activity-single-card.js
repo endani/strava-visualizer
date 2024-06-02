@@ -13,7 +13,6 @@ const style = {
 }
 
 const ActivitySingleCard = (props) => {
-  console.log(props)
   const mapContainer = React.useRef(null)
   const [, setMap] = React.useState(null)
 
@@ -140,7 +139,7 @@ const ActivitySingleCard = (props) => {
     }
 
     if (!map) initializeMap({ setMap, mapContainer })
-  }, [decodedPolylineCoordinates, props])
+  }, [])
 
   return <div ref={(el) => (mapContainer.current = el)} style={style} />
 }

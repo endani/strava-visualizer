@@ -1,21 +1,27 @@
 'use client'
 
 import Head from 'next/head'
-import { useParams } from 'next/navigation'
+import { useParams, useSearchParams } from 'next/navigation'
 import { Spinner, button as buttonStyles } from '@nextui-org/react'
 import NextLink from 'next/link'
 import clsx from 'clsx'
 
-import { ActivityChart, ActivitySingleCard } from '@/components'
+import { ActivitySingleCard } from '@/components'
 import { secondsToTime } from '@/utils'
 import { useGetActivity, useGetActivityStream } from '@/api'
 
-export default function SingleActivity() {
-  const params = useParams<{ id: string }>()
+export const getServerSideProps = async ({ params }) => {
   const { id } = params
 
-  const { data: activity, isLoading: isActivityLoading } = useGetActivity(id)
+  return {
+    props: {
+      id,
+    },
+  }
+}
 
+export default function SingleActivity({ id }) {
+  const { data: activity, isLoading: isActivityLoading } = useGetActivity(id)
   const { data: activityStream, isLoading: isActivityStreamLoading } =
     useGetActivityStream(id)
 
