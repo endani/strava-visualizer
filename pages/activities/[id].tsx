@@ -1,7 +1,6 @@
 'use client'
 
 import Head from 'next/head'
-import { useParams, useSearchParams } from 'next/navigation'
 import { Spinner, button as buttonStyles } from '@nextui-org/react'
 import NextLink from 'next/link'
 import clsx from 'clsx'
