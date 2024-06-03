@@ -11,6 +11,7 @@ import {
 } from '@nextui-org/react'
 // import clsx from 'clsx'
 import NextLink from 'next/link'
+import { useRouter } from 'next/navigation'
 // import { link as linkStyles } from '@nextui-org/theme'
 
 import { siteConfig } from '@/config/site'
@@ -20,6 +21,12 @@ import { useAuth } from '@/contexts/auth-provider'
 
 export const Navbar = () => {
   const { isAuthenticated, logout } = useAuth()
+  const router = useRouter()
+
+  const handleLogout = () => {
+    logout()
+    router.push('/')
+  }
 
   return (
     <NextUINavbar maxWidth="xl" position="sticky">
@@ -64,7 +71,7 @@ export const Navbar = () => {
               as={Link}
               className="text-sm font-normal text-default-600 bg-default-100"
               variant="flat"
-              onClick={logout}
+              onClick={handleLogout}
             >
               Logout
             </Button>

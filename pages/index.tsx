@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Link, button as buttonStyles } from '@nextui-org/react'
+import { Link, button as buttonStyles, code } from '@nextui-org/react'
 import { useSearchParams } from 'next/navigation'
 
 import { Activities } from '@/components'
@@ -7,10 +7,19 @@ import DefaultLayout from '@/layouts/default'
 import { useAuth } from '@/contexts/auth-provider'
 import { subtitle, title } from '@/config/primitives'
 
-export const getServerSideProps = async (context) => {
+export const getServerSideProps = async ({ req, query }) => {
+  const headers = req.headers
+
+  const protocol = headers['x-forwarded-proto'] || 'http'
+  const host = headers['x-forwarded-host'] || headers.host
+
+  const hostname = `${protocol}://${host}`
+
   return {
     props: {
-      host: context.req.headers.host,
+      host: hostname,
+      code: query?.code || null,
+      logout: query?.logout || null,
     },
   }
 }
@@ -43,23 +52,14 @@ const NonLoggedContent = ({ host }) => {
   )
 }
 
-export default function IndexPage({ host }) {
+export default function IndexPage({ host, code, logout }) {
   const { isAuthenticated, authenticate } = useAuth()
 
-  const params = useSearchParams()
-  const code = params.get('code')
-
   useEffect(() => {
-    if (code) {
-      if (isAuthenticated) {
-        window.history.replaceState({}, document.title, '/')
-
-        return
-      }
-
+    if (!logout && code && !isAuthenticated) {
       authenticate(code)
     }
-  }, [code, isAuthenticated])
+  }, [code, isAuthenticated, logout])
 
   return (
     <DefaultLayout>

@@ -5,6 +5,7 @@ import {
   useEffect,
   useState,
 } from 'react'
+import { useRouter } from 'next/router'
 
 import { AuthData, AuthContextType } from './auth-provider.types'
 
@@ -36,6 +37,8 @@ const getInitialState = (): AuthData => {
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [authData, setAuthData] = useState<AuthData | null>()
+
+  const router = useRouter()
 
   const checkAuthDataState = (authData: AuthData) => {
     const now = Number((new Date().getTime() / 1000).toFixed(0))
@@ -71,6 +74,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = () => {
     setAuthData(null)
     localStorage.removeItem('strava-ai')
+
+    router.push('/?logout=true')
   }
 
   const isAuthenticated = Boolean(authData?.access_token)
