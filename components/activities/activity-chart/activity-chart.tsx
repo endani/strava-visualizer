@@ -2,20 +2,13 @@
 import { Card, Title, AreaChart } from '@tremor/react'
 import { round, map } from 'lodash'
 
-const DISPLAY_ACTIVITY_DISTANCE_UNIT = 'km'
-
 const dataFormatter = (number: number) =>
   `${Intl.NumberFormat('us').format(number).toString()}%`
 
 const ActivityChart = (props: any) => {
-  const originalArray = props.data
-  // const mediaDarkMode = true
-  // const showHeartrate = true
-  // const displayActivityTotalElevationGainUnit = 'm'
-  // const displaySpeedUnit = 'kph'
+  const { data: originalArray } = props
 
   // distance
-
   const distance = originalArray.filter((item: any) =>
     item.type.includes('distance'),
   )
@@ -75,75 +68,21 @@ const ActivityChart = (props: any) => {
 
   return (
     <Card>
-      <Title>Export/Import Growth Rates (1970 to 2021)</Title>
+      <Title>Activity Chart</Title>
       <AreaChart
         categories={['altitude', 'heartrate', 'speed']}
         className="mt-6"
+        color="blue"
         data={formattedData}
         index="distance"
+        showGridLines={false}
+        showXAxis={false}
+        showYAxis={false}
         valueFormatter={dataFormatter}
         yAxisWidth={40}
       />
     </Card>
   )
-  // return (
-  //   <ChartContainer>
-  //     <ResponsiveContainer width="99%" height={200}>
-  //       <ComposedChart data={formattedData}>
-  //         <Tooltip content={<CustomTooltip />} />
-  //         <CartesianGrid />
-  //         <XAxis
-  //           tick={<Tick payload={{ value: 0 }} />}
-  //           type="number"
-  //           domain={[0, 'dataMax']}
-  //           // interval="Number"
-  //           allowDecimals
-  //           dataKey="distance"
-  //           minTickGap={20}
-  //         />
-  //         <YAxis
-  //           tick={<Tick payload={{ value: 0 }} />}
-  //           minTickGap={30}
-  //           type="number"
-  //           dataKey="altitude"
-  //           orientation="right"
-  //           hide
-  //         />
-
-  //         <Area
-  //           type="monotone"
-  //           dataKey="altitude"
-  //           stroke={mediaDarkMode ? '#fff' : '#000'}
-  //           unit={displayActivityTotalElevationGainUnit}
-  //           strokeWidth={0}
-  //           dot={false}
-  //           fill={mediaDarkMode ? '#fff' : '#000'}
-  //           fillOpacity={0.2}
-  //         />
-  //         {showHeartrate ? (
-  //           <Line
-  //             type="monotone"
-  //             dataKey="heartrate"
-  //             unit="bpm"
-  //             stroke="#DC524D"
-  //             strokeWidth={1}
-  //             dot={false}
-  //           />
-  //         ) : null}
-
-  //         <Line
-  //           type="monotone"
-  //           dataKey="speed"
-  //           unit={displaySpeedUnit}
-  //           stroke="#0085FF"
-  //           strokeWidth={1}
-  //           // yAxisId="left"
-  //           dot={false}
-  //         />
-  //       </ComposedChart>
-  //     </ResponsiveContainer>
-  //   </ChartContainer>
-  // )
 }
 
 export { ActivityChart }

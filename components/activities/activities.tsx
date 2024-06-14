@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import Head from 'next/head'
 import { Spinner } from '@nextui-org/spinner'
 
@@ -20,10 +19,6 @@ const Activities = () => {
     <>
       <Head>
         <title>Activities</title>
-        <meta
-          content="Get the most out of your Strava data with Strava Visualizer."
-          name="description"
-        />
       </Head>
       <main>
         <div className="py-24 sm:py-32">
