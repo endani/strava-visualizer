@@ -17,8 +17,8 @@ export interface Activity {
   sport_type: string
   workout_type: number
   id: number
-  start_date: Date
-  start_date_local: Date
+  start_date: string
+  start_date_local: string
   timezone: string
   utc_offset: number
   location_city: null

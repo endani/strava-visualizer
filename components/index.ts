@@ -3,3 +3,4 @@ export { ActivitySingleCard } from './activities/activity-single-card/activity-s
 export { ActivityChart } from './activities/activity-chart/activity-chart'
 export { Activities } from './activities/activities'
 export { ActivityMap } from './activities/activity-map/activity-map'
+export { Navbar } from './navbar'
