@@ -1,38 +1,40 @@
+import '@/styles/globals.css'
 import type { AppProps } from 'next/app'
 
-import { QueryClient, QueryClientProvider } from 'react-query'
-import { ReactQueryDevtools } from 'react-query/devtools'
-import { NextUIProvider } from '@nextui-org/react'
-import { ThemeProvider as NextThemesProvider } from 'next-themes'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { SessionProvider } from 'next-auth/react'
+import { ThemeProvider } from 'next-themes'
+import {
+  HydrationBoundary,
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
+import { useState } from 'react'
 import { useRouter } from 'next/router'
 
-import { fontSans, fontMono } from '../config/fonts'
+import { fontSans } from '@/config/fonts'
+import { ActivitiesProvider } from '@/contexts/activities-provider'
 
-import '@/styles/globals.css'
-import { AuthProvider } from '@/contexts/auth-provider'
-
-const queryClient = new QueryClient()
+const isDev = process.env.NODE_ENV === 'development'
 
 export default function App({ Component, pageProps }: AppProps) {
-  const router = useRouter()
-
-  const isDev = process.env.NODE_ENV === 'development'
+  const [queryClient] = useState(() => new QueryClient())
+  const _router = useRouter()
 
   return (
-    <NextUIProvider navigate={router.push}>
-      <NextThemesProvider>
-        <QueryClientProvider client={queryClient}>
-          <AuthProvider>
-            <Component {...pageProps} />
-          </AuthProvider>
-          {isDev && <ReactQueryDevtools initialIsOpen={false} />}
-        </QueryClientProvider>
-      </NextThemesProvider>
-    </NextUIProvider>
+    <QueryClientProvider client={queryClient}>
+      <HydrationBoundary state={pageProps.dehydratedState}>
+        <SessionProvider session={pageProps.session}>
+          <ThemeProvider attribute="class" defaultTheme="dark">
+            <ActivitiesProvider>
+              <div className={fontSans.className}>
+                <Component {...pageProps} />
+              </div>
+            </ActivitiesProvider>
+          </ThemeProvider>
+        </SessionProvider>
+      </HydrationBoundary>
+      {isDev && <ReactQueryDevtools initialIsOpen={false} />}
+    </QueryClientProvider>
   )
-}
-
-export const fonts = {
-  sans: fontSans.style.fontFamily,
-  mono: fontMono.style.fontFamily,
 }

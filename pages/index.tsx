@@ -1,69 +1,63 @@
-import { useEffect } from 'react'
-import { Link, button as buttonStyles, code } from '@nextui-org/react'
-import { useSearchParams } from 'next/navigation'
+import { useSession, signIn } from 'next-auth/react'
+import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
+import { FaStrava } from 'react-icons/fa'
 
-import { Activities } from '@/components'
-import DefaultLayout from '@/layouts/default'
-import { useAuth } from '@/contexts/auth-provider'
-import { subtitle, title } from '@/config/primitives'
+import { Button } from '@/components/ui/button'
+import { Spinner } from '@/components/ui/spinner'
 
-export const getServerSideProps = async ({ req, query }) => {
-  const headers = req.headers
-
-  const protocol = headers['x-forwarded-proto'] || 'http'
-  const host = headers['x-forwarded-host'] || headers.host
-
-  const hostname = `${protocol}://${host}`
-
-  return {
-    props: {
-      host: hostname,
-      code: query?.code || null,
-      logout: query?.logout || null,
-    },
-  }
-}
-
-const NonLoggedContent = ({ host }) => {
-  return (
-    <section className="flex flex-col items-center justify-center gap-6 py-8 md:py-10">
-      <div className="inline-block max-w-lg text-center justify-center">
-        <h1 className={title()}>Get the most of your&nbsp;</h1>
-        <h1 className={title({ color: 'violet' })}>Strava.</h1>
-        <br />
-        <h1 className={title()}>Visually.</h1>
-        <h4 className={subtitle({ class: 'mt-4' })}>
-          Strava Visualizer is the best way to understand your activities,
-          analyze your data, and get better at your sport.
-        </h4>
-      </div>
-
-      <div className="flex gap-3">
-        <Link
-          className={buttonStyles({
-            color: 'primary',
-          })}
-          href={`https://www.strava.com/oauth/authorize?client_id=${process.env.stravaClient}&response_type=code&redirect_uri=${host}&approval_prompt=force&scope=activity:read_all,read_all,activity:read,profile:read_all`}
-        >
-          Login with Strava
-        </Link>
-      </div>
-    </section>
-  )
-}
-
-export default function IndexPage({ host, code, logout }) {
-  const { isAuthenticated, authenticate } = useAuth()
+export default function LoginPage() {
+  const { data: _session, status } = useSession()
+  const router = useRouter()
+  const [isLoggingIn, setIsLoggingIn] = useState(false)
 
   useEffect(() => {
-    if (!logout && code && !isAuthenticated) {
-      authenticate(code)
+    if (status === 'authenticated') {
+      router.push('/activities')
     }
-  }, [code, isAuthenticated, logout])
+  }, [status, router])
+
+  if (status === 'loading') {
+    return null // or a loading spinner
+  }
 
   return (
-    <DefaultLayout>
-      {!isAuthenticated ? <NonLoggedContent host={host} /> : <Activities />}
-    </DefaultLayout>
+    <div className="w-full lg:grid lg:min-h-screen lg:grid-cols-5">
+      <div className="flex items-center justify-center bg-gradient-to-br from-indigo-500 from-10% via-sky-500 via-30% to-emerald-500 to-90% py-24 px-12 text-center lg:col-span-3 lg:text-left lg:[clip-path:polygon(0_0,_100%_0,_85%_100%,_0%_100%)]">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight text-white sm:text-6xl lg:text-8xl">
+            Go beyond the numbers.
+          </h1>
+          <p className="mt-6 max-w-xl text-xl leading-8 text-white/90">
+            Strava Visualizer is the best way to understand your activities,
+            analyze your data, and get better at your sport.
+          </p>
+        </div>
+      </div>
+      <div className="flex items-center justify-center py-24 lg:col-span-2">
+        <Button
+          className="w-[350px]"
+          disabled={isLoggingIn}
+          size="lg"
+          variant="outline"
+          onClick={() => {
+            setIsLoggingIn(true)
+            signIn('strava', { callbackUrl: '/activities' })
+          }}
+        >
+          {isLoggingIn ? (
+            <div className="flex items-center justify-center">
+              <Spinner className="mr-2 h-5 w-5" />
+              Logging in...
+            </div>
+          ) : (
+            <div className="flex items-center justify-center">
+              <FaStrava className="mr-2 h-5 w-5" />
+              Login with Strava
+            </div>
+          )}
+        </Button>
+      </div>
+    </div>
   )
 }

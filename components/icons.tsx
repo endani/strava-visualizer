@@ -170,3 +170,16 @@ export const NextUILogo: React.FC<IconSvgProps> = (props) => {
     </svg>
   )
 }
+
+export const Strava = ({ className }: { className?: string }) => (
+  <svg
+    className={className}
+    fill="currentColor"
+    role="img"
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <title>Strava</title>
+    <path d="M15.387 18.297L11.437 11.337L7.5 18.297H10.832L11.437 17.262L12.042 18.297H15.387ZM8.613 0L4.413 7.395H7.735L8.613 5.875L9.491 7.395H12.813L8.613 0ZM19.2 7.395L15 14.79L10.8 7.395H14.132L15 8.915L15.868 7.395H19.2Z" />
+  </svg>
+)

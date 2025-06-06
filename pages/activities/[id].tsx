@@ -1,136 +1,173 @@
 'use client'
 
 import Head from 'next/head'
-import { Spinner, button as buttonStyles } from '@nextui-org/react'
 import NextLink from 'next/link'
-import clsx from 'clsx'
+import { useRouter } from 'next/router'
+import { useSession } from 'next-auth/react'
+import { ArrowLeft, Mountain, Map, Timer, Flame, ThumbsUp } from 'lucide-react'
+import { useMemo, useState } from 'react'
 
-import { ActivitySingleCard } from '@/components'
-import { secondsToTime } from '@/utils'
+import { buttonVariants } from '@/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import { ActivityMap } from '@/components/activity-map'
+import { ActivityChart } from '@/components/activity-chart'
+import { secondsToTime, meterstoUnits } from '@/utils'
 import { useGetActivity, useGetActivityStream } from '@/api'
+import DefaultLayout from '@/layouts/default'
+import { ActivityDetailsSkeleton } from '@/components/skeletons/activity-details-skeleton'
 
-export const getServerSideProps = async ({ params }) => {
-  const { id } = params
+export default function SingleActivity() {
+  const router = useRouter()
+  const { id } = router.query
+  const { data: session } = useSession()
+  const token = session?.accessToken || ''
+  const [hoveredDataPoint, setHoveredDataPoint] = useState<any>(null)
 
-  return {
-    props: {
-      id,
-    },
-  }
-}
-
-export default function SingleActivity({ id }) {
-  const { data: activity, isLoading: isActivityLoading } = useGetActivity(id)
+  const { data: activity, isLoading: isActivityLoading } = useGetActivity(
+    token,
+    id as string,
+  )
   const { data: activityStream, isLoading: isActivityStreamLoading } =
-    useGetActivityStream(id)
+    useGetActivityStream(token, id as string)
 
-  if (isActivityLoading || isActivityStreamLoading)
+  const chartData = useMemo(() => {
+    if (!activityStream) return []
+
+    const distanceStream =
+      activityStream.find((s) => s.type === 'distance')?.data || []
+    const altitudeStream =
+      activityStream.find((s) => s.type === 'altitude')?.data || []
+    const heartrateStream =
+      activityStream.find((s) => s.type === 'heartrate')?.data || []
+    const velocityStream =
+      activityStream.find((s) => s.type === 'velocity_smooth')?.data || []
+    const latlngStream =
+      activityStream.find((s) => s.type === 'latlng')?.data || []
+
+    return distanceStream.map((distance: number, index: number) => ({
+      distance: Number((distance / 1000).toFixed(2)),
+      altitude: altitudeStream[index],
+      heartrate: heartrateStream[index],
+      velocity: velocityStream[index]
+        ? Number((velocityStream[index] * 3.6).toFixed(1))
+        : 0,
+      latlng: latlngStream[index],
+    }))
+  }, [activityStream])
+
+  const latlngStreamData = useMemo(
+    () => activityStream?.find((s) => s.type === 'latlng')?.data,
+    [activityStream],
+  )
+
+  if (isActivityLoading || isActivityStreamLoading || !activity) {
     return (
-      <div className="mx-auto text-center mt-16">
-        <Spinner color="default" size="sm" />
-      </div>
+      <DefaultLayout>
+        <ActivityDetailsSkeleton />
+      </DefaultLayout>
     )
+  }
+
+  const stats = [
+    {
+      name: 'Distance',
+      value: meterstoUnits('kilometers', activity.distance),
+      icon: <Map className="h-5 w-5 text-primary" />,
+    },
+    {
+      name: 'Elevation',
+      value: `${activity.total_elevation_gain.toLocaleString()} m`,
+      icon: <Mountain className="h-5 w-5 text-primary" />,
+    },
+    {
+      name: 'Duration',
+      value: secondsToTime(activity.moving_time),
+      icon: <Timer className="h-5 w-5 text-primary" />,
+    },
+    {
+      name: 'Calories',
+      value: activity.calories.toLocaleString(),
+      icon: <Flame className="h-5 w-5 text-primary" />,
+    },
+    {
+      name: 'Kudos',
+      value: activity.kudos_count,
+      icon: <ThumbsUp className="h-5 w-5 text-primary" />,
+    },
+  ]
 
   return (
-    <>
+    <DefaultLayout>
       <Head>
-        <title>Activity</title>
-        <meta
-          content="Get the most out of your Strava data with Strava Visualizer."
-          name="description"
-        />
+        <title>{activity.name}</title>
       </Head>
-      <main>
-        <div className="grid min-h-screen grid-cols-2">
-          <div className="col-span-1 border-r border-gray-200 bg-gray-50 dark:border-gray-600 dark:bg-gray-900">
-            <main className="flex-1 overflow-y-auto focus:outline-none">
-              <div className="relative px-4 pb-20 pt-8 sm:px-6 lg:px-8 lg:pb-8 lg:pt-8">
-                <div className="relative mx-auto max-w-7xl">
-                  <NextLink
-                    className={clsx(
-                      buttonStyles({
-                        color: 'primary',
-                      }),
-                      'mb-4',
-                    )}
-                    href="/"
-                  >
-                    ← Back
-                  </NextLink>
+      <div className="py-8 bg-muted/20 -mx-6 px-6">
+        <div className="container mx-auto">
+          <div className="mb-8">
+            <NextLink
+              className={buttonVariants({
+                variant: 'outline',
+                className: 'mb-4',
+              })}
+              href="/activities"
+            >
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Activities
+            </NextLink>
 
-                  <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-gray-200 sm:text-4xl">
-                    {activity?.name}
-                  </h2>
+            <h1 className="text-4xl font-bold tracking-tight mt-2 text-primary">
+              {activity.name}
+            </h1>
+            <p className="text-muted-foreground mt-2">
+              {new Date(activity.start_date_local).toLocaleString(undefined, {
+                dateStyle: 'full',
+                timeStyle: 'short',
+              })}
+            </p>
 
-                  <div className="mt-3 flex space-x-1 text-sm text-gray-500">
-                    <time dateTime="2020-03-16">
-                      {/* <Moment
-                        format="ddd, Do MMM YYYY"
-                        date={activity.start_date_local}
-                      /> */}
-                    </time>
-                  </div>
-                  <div className="mt-3 flex space-x-1 text-sm text-gray-500">
-                    {/* <ActivityChart data={activityStream} /> */}
-                  </div>
-                  <div className="mt-8 overflow-hidden">
-                    <dl className="-mx-8 -mt-8 flex flex-wrap">
-                      <div className="flex flex-col px-8 pt-8">
-                        <dt className="order-2 text-base font-medium text-gray-500">
-                          Distance
-                        </dt>
-                        <dd className="order-1 text-2xl font-extrabold text-indigo-600 sm:text-3xl">
-                          {(activity?.distance / 1000).toFixed(1)}
-                        </dd>
-                      </div>
-                      <div className="flex flex-col px-8 pt-8">
-                        <dt className="order-2 text-base font-medium text-gray-500">
-                          Elevation
-                        </dt>
-                        <dd className="order-1 text-2xl font-extrabold text-indigo-600 sm:text-3xl">
-                          {activity?.total_elevation_gain} m
-                        </dd>
-                      </div>
-                      <div className="flex flex-col px-8 pt-8">
-                        <dt className="order-2 text-base font-medium text-gray-500">
-                          Duration
-                        </dt>
-                        <dd className="order-1 text-2xl font-extrabold text-indigo-600 sm:text-3xl">
-                          {secondsToTime(activity?.moving_time)}
-                        </dd>
-                      </div>
-                      <div className="flex flex-col px-8 pt-8">
-                        <dt className="order-2 text-base font-medium text-gray-500">
-                          Calories
-                        </dt>
-                        <dd className="order-1 text-2xl font-extrabold text-indigo-600 sm:text-3xl">
-                          {activity?.calories}
-                        </dd>
-                      </div>
-                      <div className="flex flex-col px-8 pt-8">
-                        <dt className="order-2 text-base font-medium text-gray-500">
-                          Kudos
-                        </dt>
-                        <dd className="order-1 text-2xl font-extrabold text-indigo-600 sm:text-3xl">
-                          {activity?.kudos_count}
-                        </dd>
-                      </div>
-                    </dl>
+            <div className="mt-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-y-6 gap-x-4 border-t pt-6">
+              {stats.map((stat) => (
+                <div key={stat.name} className="flex items-start gap-3">
+                  <div className="mt-1">{stat.icon}</div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">{stat.name}</p>
+                    <p className="text-2xl font-semibold">{stat.value}</p>
                   </div>
                 </div>
-              </div>
-            </main>
+              ))}
+            </div>
           </div>
 
-          <div className="h-100 w-100 relative block">
-            {activity?.start_latlng ? (
-              <ActivitySingleCard activitySummary={activity} />
-            ) : (
-              <div />
+          <div className="space-y-8">
+            <div className="h-[500px] w-full rounded-md overflow-hidden">
+              <ActivityMap
+                coordinates={latlngStreamData}
+                hoveredDataPoint={hoveredDataPoint}
+                summary_polyline={activity.map.summary_polyline}
+              />
+            </div>
+
+            {activityStream && (
+              <Card className="bg-gradient-to-br from-background to-muted/50">
+                <CardHeader>
+                  <CardTitle>Performance</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ActivityChart
+                    data={chartData}
+                    onHover={setHoveredDataPoint}
+                  />
+                </CardContent>
+              </Card>
             )}
           </div>
         </div>
-      </main>
-    </>
+      </div>
+    </DefaultLayout>
   )
 }

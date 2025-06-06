@@ -4,18 +4,16 @@ export const API_BASE_URL = 'https://www.strava.com'
 
 const usingAuthenticatedGet = async (
   path: string,
+  token: string,
   config: AxiosRequestConfig = {},
 ) => {
-  const data = JSON.parse(localStorage?.getItem('strava-ai') as string) as any
-  const { access_token } = data?.auth || {}
-
-  if (!access_token) return []
+  if (!token) return []
 
   const result = await axios.get(API_BASE_URL + path, {
     ...config,
     params: { ...config.params },
     headers: {
-      Authorization: `Bearer ${access_token}`,
+      Authorization: `Bearer ${token}`,
     },
   })
 

@@ -1,6 +1,7 @@
-import { useQuery } from 'react-query'
+import { useQuery, useInfiniteQuery } from '@tanstack/react-query'
+import axios from 'axios'
 
-import { usingAuthenticatedGet, usingAuthenticatedPost } from './utils'
+import { usingAuthenticatedGet } from './utils'
 
 import { Activity, Athlete } from '@/types'
 
@@ -17,61 +18,67 @@ const QUERY_ACTIVITY = '/api/v3/activities/'
 
 const STALE_TIME = 1000 * 60 * 5
 
-export const getStravaToken = async (code: string) =>
-  await usingAuthenticatedPost(QUERY_TOKEN, {
-    grant_type: 'authorization_code',
-    client_id: API_CLIENT,
-    client_secret: API_SECRET,
-    code,
-  } as any)
-
-export const refreshStravaToken = async (refreshToken: string) =>
-  await usingAuthenticatedPost(QUERY_TOKEN, {
-    grant_type: 'refresh_token',
-    client_id: API_CLIENT,
-    client_secret: API_SECRET,
-    refresh_token: refreshToken,
-  } as any)
-
-const useGetAthlete = async (token: any) => {
+const useGetAthlete = (token: string) => {
   const fetchAthlete = () =>
-    usingAuthenticatedGet(QUERY_ATHLETE, {
+    usingAuthenticatedGet(QUERY_ATHLETE, token, {
       headers: {
         Accept: 'application/json',
-        Authorization: `Bearer ${token}`,
       },
     })
 
-  return useQuery<Athlete[]>('athlete', fetchAthlete, {
+  return useQuery<Athlete[]>({
+    queryKey: ['athlete'],
+    queryFn: fetchAthlete,
     staleTime: STALE_TIME,
+    enabled: !!token,
   })
 }
 
-const useGetActivities = () => {
-  const fetchActivities = () => usingAuthenticatedGet(QUERY_ATHLETE_ACTIVITIES)
+const useGetActivities = (token: string) => {
+  const fetchActivities = (context: any) => {
+    const { pageParam = 1 } = context
+    return usingAuthenticatedGet(
+      `${QUERY_ATHLETE_ACTIVITIES}?page=${pageParam}&per_page=30`,
+      token,
+    )
+  }
 
-  return useQuery<Activity[]>('activities', fetchActivities, {
+  return useInfiniteQuery<Activity[]>({
+    queryKey: ['activities', token],
+    queryFn: fetchActivities,
+    getNextPageParam: (lastPage, allPages) => {
+      if (lastPage.length < 30) {
+        return undefined
+      }
+      return allPages.length + 1
+    },
+    initialPageParam: 1,
     staleTime: STALE_TIME,
+    enabled: !!token,
   })
 }
 
-const useGetActivity = (id: any) => {
+const useGetActivity = (token: string, id: any) => {
   const fetchActivity = () =>
-    usingAuthenticatedGet(QUERY_ATHLETE_SINGLE_ACTIVITY(id), {
+    usingAuthenticatedGet(QUERY_ATHLETE_SINGLE_ACTIVITY(id), token, {
       headers: {
         Accept: 'application/json',
       },
     })
 
-  return useQuery<Activity>(['activity', id], fetchActivity, {
+  return useQuery<Activity>({
+    queryKey: ['activity', id],
+    queryFn: fetchActivity,
     staleTime: STALE_TIME,
+    enabled: !!token && !!id,
   })
 }
 
-const useGetActivityStream = (id: any) => {
+const useGetActivityStream = (token: string, id: any) => {
   const fetchActivityStream = () =>
     usingAuthenticatedGet(
       `${QUERY_ACTIVITY}${id}/streams/watts,altitude,heartrate,latlng,cadence,velocity_smooth?resolution=low`,
+      token,
       {
         headers: {
           Accept: 'application/json',
@@ -79,8 +86,11 @@ const useGetActivityStream = (id: any) => {
       },
     )
 
-  return useQuery(['activityStream', id], fetchActivityStream, {
+  return useQuery({
+    queryKey: ['activityStream', id],
+    queryFn: fetchActivityStream,
     staleTime: STALE_TIME,
+    enabled: !!token && !!id,
   })
 }
 
