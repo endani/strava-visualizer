@@ -1,35 +1,23 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
 import NextAuth from 'next-auth'
-import StravaProvider from 'next-auth/providers/strava'
+import Strava from 'next-auth/providers/strava'
 
-// Debug logging
-console.log('NextAuth API route loaded')
+console.log('NextAuth v5 config loading...')
 console.log(
-  'Strava Client ID:',
-  process.env.STRAVA_CLIENT_ID ? 'Set' : 'Missing',
+  'STRAVA_CLIENT_ID:',
+  process.env.STRAVA_CLIENT_ID ? 'SET' : 'MISSING',
 )
-console.log('Strava Client Secret is set:', !!process.env.STRAVA_CLIENT_SECRET)
-console.log('NextAuth Secret is set:', !!process.env.NEXTAUTH_SECRET)
-console.log('NEXTAUTH_URL is set:', process.env.NEXTAUTH_URL)
+console.log(
+  'STRAVA_CLIENT_SECRET:',
+  process.env.STRAVA_CLIENT_SECRET ? 'SET' : 'MISSING',
+)
+console.log('NEXTAUTH_SECRET:', process.env.NEXTAUTH_SECRET ? 'SET' : 'MISSING')
+console.log('NEXTAUTH_URL:', process.env.NEXTAUTH_URL)
 
-// Validate required environment variables
-if (!process.env.STRAVA_CLIENT_ID) {
-  throw new Error('STRAVA_CLIENT_ID is not set')
-}
-
-if (!process.env.STRAVA_CLIENT_SECRET) {
-  throw new Error('STRAVA_CLIENT_SECRET is not set')
-}
-
-if (!process.env.NEXTAUTH_SECRET) {
-  throw new Error('NEXTAUTH_SECRET is not set')
-}
-
-const authOptions = {
+export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
-    StravaProvider({
-      clientId: process.env.STRAVA_CLIENT_ID,
-      clientSecret: process.env.STRAVA_CLIENT_SECRET,
+    Strava({
+      clientId: process.env.STRAVA_CLIENT_ID!,
+      clientSecret: process.env.STRAVA_CLIENT_SECRET!,
       authorization: {
         params: {
           scope: 'activity:read_all,profile:read_all',
@@ -38,22 +26,18 @@ const authOptions = {
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
-  debug: process.env.NODE_ENV === 'development',
+  debug: true,
   callbacks: {
     async jwt({ token, account }) {
-      // Persist the OAuth access_token to the token right after signin
       if (account) {
         token.accessToken = account.access_token
         token.refreshToken = account.refresh_token
         token.expiresAt = account.expires_at
       }
-
       return token
     },
     async session({ session, token }) {
-      // Send properties to the client, like an access_token from a provider.
-      session.accessToken = token.accessToken
-
+      session.accessToken = token.accessToken as string
       return session
     },
   },
@@ -61,6 +45,6 @@ const authOptions = {
     signIn: '/auth/signin',
     error: '/auth/error',
   },
-}
+})
 
-export default NextAuth(authOptions)
+export const { GET, POST } = handlers
