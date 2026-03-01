@@ -57,6 +57,7 @@ export interface Activity {
   pr_count: number
   total_photo_count: number
   has_kudoed: boolean
+  suffer_score?: number
 }
 
 export interface Athlete {

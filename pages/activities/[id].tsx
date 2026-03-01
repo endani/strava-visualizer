@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/card'
 import { ActivityMap } from '@/components/activity-map'
 import { ActivityChart } from '@/components/activity-chart'
+import { ActivityInsights } from '@/components/activity-insights'
 import { secondsToTime, meterstoUnits } from '@/utils'
 import { useGetActivity, useGetActivityStream } from '@/api'
 import DefaultLayout from '@/layouts/default'
@@ -62,6 +63,16 @@ export default function SingleActivity() {
 
   const latlngStreamData = useMemo(
     () => activityStream?.find((s) => s.type === 'latlng')?.data,
+    [activityStream],
+  )
+
+  const heartrateStreamData = useMemo(
+    () => activityStream?.find((s) => s.type === 'heartrate')?.data ?? [],
+    [activityStream],
+  )
+
+  const velocityStreamData = useMemo(
+    () => activityStream?.find((s) => s.type === 'velocity_smooth')?.data ?? [],
     [activityStream],
   )
 
@@ -164,6 +175,14 @@ export default function SingleActivity() {
                   />
                 </CardContent>
               </Card>
+            )}
+
+            {activityStream && (
+              <ActivityInsights
+                activity={activity}
+                heartrateStream={heartrateStreamData}
+                velocityStream={velocityStreamData}
+              />
             )}
           </div>
         </div>

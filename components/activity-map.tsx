@@ -75,6 +75,30 @@ export const ActivityMap = ({
 
   const lineColor = getThemeColor('--primary') || '#2563EB'
 
+  const startCoord = coordinates[0]
+  const endCoord = coordinates[coordinates.length - 1]
+
+  // Place ~10 evenly-spaced direction chevrons along the route
+  const directionMarkers: { lng: number; lat: number; bearing: number }[] = []
+  const markerCount = Math.max(1, Math.min(10, Math.floor(coordinates.length / 20)))
+  const step = Math.floor(coordinates.length / (markerCount + 1))
+  for (let i = 1; i <= markerCount; i++) {
+    const idx = i * step
+    const curr = coordinates[idx]
+    const lookahead = coordinates[Math.min(idx + Math.max(1, step >> 2), coordinates.length - 1)]
+    const [lng1, lat1] = curr
+    const [lng2, lat2] = lookahead
+    const dLng = ((lng2 - lng1) * Math.PI) / 180
+    const lat1R = (lat1 * Math.PI) / 180
+    const lat2R = (lat2 * Math.PI) / 180
+    const y = Math.sin(dLng) * Math.cos(lat2R)
+    const x =
+      Math.cos(lat1R) * Math.sin(lat2R) -
+      Math.sin(lat1R) * Math.cos(lat2R) * Math.cos(dLng)
+    const bearing = (Math.atan2(y, x) * 180) / Math.PI
+    directionMarkers.push({ lng: lng1, lat: lat1, bearing })
+  }
+
   const mapStyle =
     theme === 'dark'
       ? 'mapbox://styles/mapbox/dark-v11'
@@ -146,6 +170,41 @@ export const ActivityMap = ({
           type="line"
         />
       </Source>
+      {directionMarkers.map(({ lng, lat, bearing }, i) => (
+        <Marker key={`dir-${i}`} anchor="center" longitude={lng} latitude={lat}>
+          <div
+            style={{ transform: `rotate(${bearing}deg)`, backgroundColor: lineColor }}
+            className="flex h-5 w-5 items-center justify-center rounded-sm opacity-80 shadow-sm"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="white"
+              className="h-3 w-3"
+            >
+              <path d="M12 2l7 18-7-5-7 5z" />
+            </svg>
+          </div>
+        </Marker>
+      ))}
+      {startCoord && (
+        <Marker
+          anchor="center"
+          latitude={startCoord[1]}
+          longitude={startCoord[0]}
+        >
+          <div className="h-3 w-3 rounded-full border-2 border-background bg-emerald-500 shadow-md" />
+        </Marker>
+      )}
+      {endCoord && (
+        <Marker
+          anchor="center"
+          latitude={endCoord[1]}
+          longitude={endCoord[0]}
+        >
+          <div className="h-3 w-3 rounded-full border-2 border-background bg-destructive shadow-md" />
+        </Marker>
+      )}
       {hoveredDataPoint && hoveredDataPoint.latlng && (
         <Marker
           anchor="center"
