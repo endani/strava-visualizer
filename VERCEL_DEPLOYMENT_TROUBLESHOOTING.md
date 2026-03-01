@@ -32,7 +32,9 @@ Visit these URLs to test if API routes are working:
 
 ### 4. Fix 404 on `/api/auth/*` (auth works locally, 404 on Vercel)
 
-The app uses two settings that often fix this:
+**Important:** NextAuth requires a single catch-all file `pages/api/auth/[...nextauth].ts`. Do not split auth into separate route files (e.g. `session.ts`, `providers.ts`); NextAuth checks at runtime that it’s running from `[...nextauth]` and will throw `MISSING_NEXTAUTH_API_ROUTE_ERROR` otherwise.
+
+The app uses two settings that often fix 404s:
 
 - **`trustHost: true`** in the NextAuth config — so NextAuth trusts Vercel’s host (e.g. `X-Forwarded-Host`). Without this, auth can work locally but fail on Vercel.
 - **`runtime: 'nodejs'`** on the auth API route — so the route is deployed as a Node serverless function. If it were treated as Edge, NextAuth could misbehave or 404.
