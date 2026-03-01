@@ -16,6 +16,7 @@ function getAuthOptions() {
     ],
     secret: process.env.NEXTAUTH_SECRET,
     debug: false,
+    trustHost: true,
     callbacks: {
       async jwt({ token, account }) {
         if (account) {
@@ -36,5 +37,8 @@ function getAuthOptions() {
     },
   }
 }
+
+// Force Node.js runtime on Vercel so the auth API route is deployed as a serverless function
+export const config = { runtime: 'nodejs' }
 
 export default NextAuth(getAuthOptions())

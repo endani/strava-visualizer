@@ -29,7 +29,19 @@ Visit these URLs to test if API routes are working:
 3. Go to "Functions" tab
 4. Look for any errors in the `/api/auth/[...nextauth]` function
 
-### 4. Common Issues and Solutions
+### 4. Fix 404 on `/api/auth/*` (auth works locally, 404 on Vercel)
+
+The app uses two settings that often fix this:
+
+- **`trustHost: true`** in the NextAuth config — so NextAuth trusts Vercel’s host (e.g. `X-Forwarded-Host`). Without this, auth can work locally but fail on Vercel.
+- **`runtime: 'nodejs'`** on the auth API route — so the route is deployed as a Node serverless function. If it were treated as Edge, NextAuth could misbehave or 404.
+
+If you still see 404 after deploy:
+
+- Set **`NEXTAUTH_URL`** in Vercel to your exact production URL, e.g. `https://strava-visualizer.vercel.app` (no trailing slash). Then redeploy.
+- In Vercel, enable **“Automatically expose System Environment Variables”** so `VERCEL_URL` is available if NextAuth uses it.
+
+### 5. Common Issues and Solutions
 
 #### Issue: Environment variables not loading
 
@@ -61,14 +73,14 @@ Visit these URLs to test if API routes are working:
 - In your Strava app settings, set the redirect URI to:
   `https://strava-visualizer.vercel.app/api/auth/callback/strava`
 
-### 5. Debug Steps
+### 6. Debug Steps
 
 1. Check the test API route: `/api/test`
 2. Check Vercel function logs
 3. Verify environment variables are loaded
 4. Test with a simple API route first
 
-### 6. Alternative Solutions
+### 7. Alternative Solutions
 
 If the issue persists:
 
@@ -77,7 +89,7 @@ If the issue persists:
 3. **Clear Vercel cache**: Redeploy with cache cleared
 4. **Contact Vercel support**: If all else fails
 
-### 7. Local vs Production
+### 8. Local vs Production
 
 - Local works but production doesn't = Environment variable issue
 - Both fail = Code issue
