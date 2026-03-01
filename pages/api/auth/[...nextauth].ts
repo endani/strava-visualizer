@@ -1,18 +1,6 @@
 import NextAuth from 'next-auth'
 import StravaProvider from 'next-auth/providers/strava'
 
-console.log('NextAuth v4 config loading...')
-console.log(
-  'STRAVA_CLIENT_ID:',
-  process.env.STRAVA_CLIENT_ID ? 'SET' : 'MISSING',
-)
-console.log(
-  'STRAVA_CLIENT_SECRET:',
-  process.env.STRAVA_CLIENT_SECRET ? 'SET' : 'MISSING',
-)
-console.log('NEXTAUTH_SECRET:', process.env.NEXTAUTH_SECRET ? 'SET' : 'MISSING')
-console.log('NEXTAUTH_URL:', process.env.NEXTAUTH_URL)
-
 function getAuthOptions() {
   return {
     providers: [
@@ -27,7 +15,7 @@ function getAuthOptions() {
       }),
     ],
     secret: process.env.NEXTAUTH_SECRET,
-    debug: true,
+    debug: false,
     callbacks: {
       async jwt({ token, account }) {
         if (account) {
@@ -49,7 +37,4 @@ function getAuthOptions() {
   }
 }
 
-const authOptions = getAuthOptions()
-console.log('Auth options created successfully')
-
-export default NextAuth(authOptions)
+export default NextAuth(getAuthOptions())
