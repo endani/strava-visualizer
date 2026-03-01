@@ -21,6 +21,7 @@ Visit these URLs to test if API routes are working:
 
 - `https://strava-visualizer.vercel.app/api/health` - Should return health status
 - `https://strava-visualizer.vercel.app/api/test` - Should return environment variable status
+- `https://strava-visualizer.vercel.app/api/log-test` - Writes a log line; use to confirm Vercel Logs are showing (see §5)
 
 ### 3. Check Vercel Function Logs
 
@@ -41,7 +42,14 @@ If you still see 404 after deploy:
 - Set **`NEXTAUTH_URL`** in Vercel to your exact production URL, e.g. `https://strava-visualizer.vercel.app` (no trailing slash). Then redeploy.
 - In Vercel, enable **“Automatically expose System Environment Variables”** so `VERCEL_URL` is available if NextAuth uses it.
 
-### 5. Common Issues and Solutions
+### 5. No logs showing at all (even when visiting the site)
+
+- **Runtime logs only exist for serverless functions.** Loading the main page alone may not create a log if the page is static; API routes and `getServerSideProps` do.
+- **Check the Deployment filter:** In Logs, open the **Deployment** (or **Resource**) filter and set it to **All** or to the **latest Production** deployment. If it’s set to an old or preview deployment that gets no traffic, you’ll see no logs.
+- **Verify you’re hitting this project:** Open the site in an incognito window and use the exact production URL (e.g. `https://strava-visualizer.vercel.app`). Then trigger a request that hits an API route.
+- **Use the log-test route:** After deploying, visit `https://your-domain.vercel.app/api/log-test`. That route writes a line to the console. In Vercel Logs (filters reset, Live on), look for that request and its message. If it appears, logging works and the problem is elsewhere; if it doesn’t, the traffic may be going to another deployment or the Logs view may be filtered wrong.
+
+### 6. Common Issues and Solutions
 
 #### Issue: Environment variables not loading
 
@@ -73,14 +81,14 @@ If you still see 404 after deploy:
 - In your Strava app settings, set the redirect URI to:
   `https://strava-visualizer.vercel.app/api/auth/callback/strava`
 
-### 6. Debug Steps
+### 7. Debug Steps
 
 1. Check the test API route: `/api/test`
 2. Check Vercel function logs
 3. Verify environment variables are loaded
 4. Test with a simple API route first
 
-### 7. Alternative Solutions
+### 8. Alternative Solutions
 
 If the issue persists:
 
@@ -89,7 +97,7 @@ If the issue persists:
 3. **Clear Vercel cache**: Redeploy with cache cleared
 4. **Contact Vercel support**: If all else fails
 
-### 8. Local vs Production
+### 9. Local vs Production
 
 - Local works but production doesn't = Environment variable issue
 - Both fail = Code issue
