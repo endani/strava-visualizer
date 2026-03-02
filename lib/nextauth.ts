@@ -2,6 +2,10 @@ import NextAuth from 'next-auth'
 import StravaProvider from 'next-auth/providers/strava'
 
 export function getAuthOptions() {
+  const baseUrl =
+    process.env.NEXTAUTH_URL ||
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined)
+
   return {
     providers: [
       StravaProvider({
@@ -10,6 +14,9 @@ export function getAuthOptions() {
         authorization: {
           params: {
             scope: 'activity:read_all,profile:read_all',
+            ...(baseUrl && {
+              redirect_uri: `${baseUrl.replace(/\/$/, '')}/api/auth/callback/strava`,
+            }),
           },
         },
       }),
